@@ -15,7 +15,9 @@ import com.github.mjaremczuk.politicalpreparedness.databinding.ViewholderReprese
 import com.github.mjaremczuk.politicalpreparedness.network.models.Channel
 import com.github.mjaremczuk.politicalpreparedness.representative.model.Representative
 
-class RepresentativeListAdapter: ListAdapter<Representative, RepresentativeViewHolder>(RepresentativeDiffCallback()){
+class RepresentativeListAdapter(
+        private val clickListener: OnClickListener
+) : ListAdapter<Representative, RepresentativeViewHolder>(RepresentativeDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepresentativeViewHolder {
         return RepresentativeViewHolder.from(parent)
@@ -25,13 +27,38 @@ class RepresentativeListAdapter: ListAdapter<Representative, RepresentativeViewH
         val item = getItem(position)
         holder.bind(item)
     }
+
+    companion object RepresentativeDiffCallback : DiffUtil.ItemCallback<Representative>() {
+        override fun areItemsTheSame(oldItem: Representative, newItem: Representative): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Representative, newItem: Representative): Boolean {
+            return oldItem.official.name == newItem.official.name
+        }
+    }
+
+    class OnClickListener(val clickListener: (representative: Representative) -> Unit) {
+        fun onClick(representative: Representative) = clickListener(representative)
+    }
 }
 
-class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding): RecyclerView.ViewHolder(binding.root) {
+class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    companion object {
+        fun from(parent: ViewGroup) =
+                RepresentativeViewHolder(ViewholderRepresentativeBinding
+                        .inflate(
+                                LayoutInflater.from(parent.context),
+                                parent,
+                                false
+                        ))
+    }
 
     fun bind(item: Representative) {
         binding.representative = item
         binding.representativePhoto.setImageResource(R.drawable.ic_profile)
+
 
         //TODO: Show social links ** Hint: Use provided helper methods
         //TODO: Show www link ** Hint: Use provided helper methods
@@ -43,10 +70,14 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding): Re
 
     private fun showSocialLinks(channels: List<Channel>) {
         val facebookUrl = getFacebookUrl(channels)
-        if (!facebookUrl.isNullOrBlank()) { enableLink(binding.facebookIcon, facebookUrl) }
+        if (!facebookUrl.isNullOrBlank()) {
+            enableLink(binding.facebookIcon, facebookUrl)
+        }
 
         val twitterUrl = getTwitterUrl(channels)
-        if (!twitterUrl.isNullOrBlank()) { enableLink(binding.twitterIcon, twitterUrl) }
+        if (!twitterUrl.isNullOrBlank()) {
+            enableLink(binding.twitterIcon, twitterUrl)
+        }
     }
 
     private fun showWWWLinks(urls: List<String>) {
@@ -75,7 +106,6 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding): Re
         val intent = Intent(ACTION_VIEW, uri)
         itemView.context.startActivity(intent)
     }
-
 }
 
 //TODO: Create RepresentativeDiffCallback

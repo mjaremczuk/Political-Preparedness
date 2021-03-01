@@ -4,13 +4,17 @@ import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
+import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.github.mjaremczuk.politicalpreparedness.network.models.Address
-import java.util.Locale
+import java.util.*
 
-class DetailFragment : Fragment() {
+class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>() {
 
     companion object {
         //TODO: Add Constant for Location request
@@ -21,7 +25,9 @@ class DetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        _binding = FragmentRepresentativeBinding.inflate(layoutInflater, container, false)
 
+        binding.lifecycleOwner = this
         //TODO: Establish bindings
 
         //TODO: Define and assign Representative adapter
@@ -29,7 +35,7 @@ class DetailFragment : Fragment() {
         //TODO: Populate Representative adapter
 
         //TODO: Establish button listeners for field and location search
-        return null
+        return binding.root
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -46,7 +52,8 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun isPermissionGranted() : Boolean {
+    private fun isPermissionGranted(): Boolean {
+        return false
         //TODO: Check if permission is already granted and return (true = granted, false = denied/other)
     }
 

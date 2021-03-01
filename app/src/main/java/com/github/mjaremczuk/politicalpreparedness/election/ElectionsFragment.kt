@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
+import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentElectionBinding
 
-class ElectionsFragment : Fragment() {
+class ElectionsFragment : DataBindFragment<FragmentElectionBinding>() {
 
     //TODO: Declare ViewModel
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
+        _binding = FragmentElectionBinding.inflate(layoutInflater, container, false)
         //TODO: Add ViewModel values and create ViewModel
 
         //TODO: Add binding values
@@ -23,9 +24,13 @@ class ElectionsFragment : Fragment() {
         //TODO: Initiate recycler adapters
 
         //TODO: Populate recycler adapters
-        return null
+        return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     //TODO: Refresh adapters when fragment loads
 
 }
