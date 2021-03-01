@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentLaunchBinding
 import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
-import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListener
+//import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListener
 
 class LaunchFragment : Fragment() {
 
