@@ -1,22 +1,20 @@
 package com.github.mjaremczuk.politicalpreparedness.launch
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.github.mjaremczuk.politicalpreparedness.R
+import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentLaunchBinding
-import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
-//import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListener
 
-class LaunchFragment : Fragment() {
+class LaunchFragment : DataBindFragment<FragmentLaunchBinding>() {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding = FragmentLaunchBinding.inflate(inflater)
+        _binding = FragmentLaunchBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
         binding.representativeButton.setOnClickListener { navToRepresentatives() }

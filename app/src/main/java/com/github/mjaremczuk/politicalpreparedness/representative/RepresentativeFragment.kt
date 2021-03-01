@@ -9,16 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.github.mjaremczuk.politicalpreparedness.network.models.Address
 import java.util.*
 
-class DetailFragment : Fragment() {
-
-    private var _binding: FragmentRepresentativeBinding? = null
-
-    val binding: FragmentRepresentativeBinding
-        get() = _binding!!
+class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>() {
 
     companion object {
         //TODO: Add Constant for Location request
