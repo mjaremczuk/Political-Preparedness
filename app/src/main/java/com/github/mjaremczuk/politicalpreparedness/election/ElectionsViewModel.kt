@@ -1,20 +1,36 @@
 package com.github.mjaremczuk.politicalpreparedness.election
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import com.github.mjaremczuk.politicalpreparedness.repository.Result
 import kotlinx.coroutines.launch
 
 //TODO: Construct ViewModel and provide election datasource
 class ElectionsViewModel(private val electionDataSource: ElectionDataSource) : ViewModel() {
 
-    val upcomingElections: LiveData<List<ElectionModel>> =
-            electionDataSource.upcomingElections
+    private val _upcomingStatus: MutableLiveData<Status> = MutableLiveData()
+    val upcomingStatus: LiveData<Status>
+        get() = _upcomingStatus
+
+    private val elections: LiveData<List<ElectionModel>> =  Transformations.map(electionDataSource.upcomingElections) {
+        when (it) {
+            is Result.Failure -> {
+                _upcomingStatus.postValue(Status.FAILURE)
+                emptyList()
+            }
+            is Result.Success -> {
+                _upcomingStatus.postValue(Status.SUCCESS)
+                it.elections
+            }
+            is Result.Loading -> {
+                _upcomingStatus.postValue(Status.LOADING)
+                upcomingElections.value
+            }
+        }
+    }
+
+    val upcomingElections: LiveData<List<ElectionModel>> = elections
 
     val savedElections: LiveData<List<ElectionModel>> = electionDataSource.savedElections
 
@@ -22,12 +38,13 @@ class ElectionsViewModel(private val electionDataSource: ElectionDataSource) : V
         viewModelScope.launch {
             getSavedElections()
             getUpcomingElections()
-//            electionDataSource.upcomingElections
-//                    .catch { it.printStackTrace() }
-//                    .collect {
-//                println("DOWNLOADED list of elections: $it")
-//            }
-//            electionDataSource.refreshElections()
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            getUpcomingElections()
+            getSavedElections()
         }
     }
 
@@ -36,8 +53,9 @@ class ElectionsViewModel(private val electionDataSource: ElectionDataSource) : V
     }
 
     private suspend fun getSavedElections() {
-
+        electionDataSource.refreshSavedElections()
     }
+
     //TODO: Create live data val for upcoming elections
 
     //TODO: Create live data val for saved elections
@@ -46,4 +64,9 @@ class ElectionsViewModel(private val electionDataSource: ElectionDataSource) : V
 
     //TODO: Create functions to navigate to saved or upcoming election voter info
 
+    enum class Status {
+        LOADING,
+        FAILURE,
+        SUCCESS
+    }
 }

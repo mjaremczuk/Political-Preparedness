@@ -5,6 +5,8 @@
     <string name="upcoming_elections">Upcoming elections</string>
     <string name="launch_logo_description">Home screen logo</string>
     <string name="election_name">%s election</string>
+    <string name="upcoming_elections_header">Upcoming elections</string>
+    <string name="saved_elections_header">Saved elections</string>
 
     <!-- TODO: Add necessary string values -->
 

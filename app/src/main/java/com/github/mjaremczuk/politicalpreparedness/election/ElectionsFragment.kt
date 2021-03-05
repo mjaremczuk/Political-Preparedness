@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentElectionBinding
 import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
@@ -23,13 +24,14 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>() {
 
         binding.upcomingElectionsRecycler.adapter =
                 ElectionListAdapter(ElectionListAdapter.ElectionListener {
-
+                    findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(it.id, it.division))
                 })
 
         binding.savedElectionsRecycler.adapter =
                 ElectionListAdapter(ElectionListAdapter.ElectionListener {
-
+                    findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(it.id, it.division))
                 })
+        binding.upcomingRefresh.setOnRefreshListener { viewModel.refresh() }
 
         //TODO: Link elections to voter info
 

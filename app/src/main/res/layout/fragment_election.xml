@@ -20,27 +20,55 @@
             android:id="@+id/upcoming_elections_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:contentDescription="@string/upcoming_elections_header"
+            android:fontFamily="@font/arima_madurai_bold"
+            android:padding="16dp"
             android:singleLine="true"
-            android:text="Upcoming elections"
-            android:textSize="24sp"
+            android:text="@string/upcoming_elections_header"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             android:textStyle="bold"
-            setVisible="@{viewModel.upcomingElections.size()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@tools:sample/lorem[31]" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/upcoming_elections_recycler"
-            listData="@{viewModel.upcomingElections}"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/upcoming_refresh"
+            refreshing="@{viewModel.upcomingStatus}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/center_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/upcoming_elections_header" />
+            app:layout_constraintTop_toBottomOf="@+id/upcoming_elections_header">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/upcoming_elections_recycler"
+                listData="@{viewModel.upcomingElections}"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/center_guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/upcoming_elections_header" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ImageView
+            android:id="@+id/upcoming_status_image"
+            loadingStatus="@{viewModel.upcomingStatus}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="100dp"
+            android:minHeight="100dp"
+            app:layout_constraintBottom_toTopOf="@+id/center_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/upcoming_elections_header"
+            app:tint="@color/colorAccent" />
+
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/center_guideline"
@@ -54,10 +82,14 @@
             setVisible="@{viewModel.savedElections.size()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:contentDescription="@string/saved_elections_header"
+            android:fontFamily="@font/arima_madurai_bold"
+            android:padding="16dp"
             android:singleLine="true"
-            android:text="Saved elections"
-            android:textSize="24sp"
+            android:text="@string/saved_elections_header"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,8 +100,8 @@
             android:id="@+id/saved_elections_recycler"
             listData="@{viewModel.savedElections}"
             android:layout_width="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

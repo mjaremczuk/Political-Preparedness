@@ -7,8 +7,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="fontFamily">@font/arima_madurai</item>
+<!--        <item name="android:fontFamily">@font/arima_madurai_black</item>-->
+<!--        <item name="toolbarStyle">@style/ToolbarStyle</item>-->
+<!--        <item name="android:toolbarStyle">@style/ToolbarStyle</item>-->
     </style>
 
+    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="fontFamily">@font/arima_madurai_black</item>
+        <item name="android:fontFamily">@font/arima_madurai_black</item>
+    </style>
+
+    <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="fontFamily">@font/arima_madurai_black</item>
+    </style>
     <!-- TODO: Add necessary styles -->
 
 </resources>
