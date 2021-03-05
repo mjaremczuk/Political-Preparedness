@@ -8,17 +8,12 @@
         android:layout_height="match_parent"
         tools:context="com.github.mjaremczuk.politicalpreparedness.MainActivity">
 
-        <!-- TODO: Add image for home screen logo. -->
-
-        <!-- TODO: Add Button to navigate to upcoming elections. -->
-
-        <!-- TODO: Add Button to navigate to representatives. -->
-
         <ImageView
             android:id="@+id/launch_logo"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/ballot_logo"
+            android:contentDescription="@string/launch_logo_description"
             app:layout_constraintBottom_toTopOf="@+id/upcoming_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +29,7 @@
             android:layout_marginBottom="8dp"
             android:backgroundTint="?colorPrimary"
             android:text="@string/upcoming_elections"
+            android:contentDescription="@string/upcoming_elections"
             android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/representative_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +44,7 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="?colorPrimary"
             android:text="@string/representatives_button"
+            android:contentDescription="@string/representatives_button"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
