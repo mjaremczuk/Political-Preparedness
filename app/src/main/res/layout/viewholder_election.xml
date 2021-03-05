@@ -6,11 +6,17 @@
         <variable
             name="election"
             type="com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel" />
+
+        <variable
+            name="listener"
+            type="com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter.ElectionListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:contentDescription="@{@string/election_name(election.name)}"
+        android:onClick="@{()->listener.onClick(election)}">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
