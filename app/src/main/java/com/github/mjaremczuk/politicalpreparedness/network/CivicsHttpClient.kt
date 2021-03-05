@@ -1,19 +1,21 @@
 package com.github.mjaremczuk.politicalpreparedness.network
 
+import com.github.mjaremczuk.politicalpreparedness.BuildConfig
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 
 class CivicsHttpClient: OkHttpClient() {
 
     companion object {
 
-        const val API_KEY = "" //TODO: Place your API Key Here
+        const val API_KEY = BuildConfig.API_KEY
 
         fun getClient(): OkHttpClient {
             return Builder()
                     .addInterceptor { chain ->
                         val original = chain.request()
                         val url = original
-                                .url()
+                                .url
                                 .newBuilder()
                                 .addQueryParameter("key", API_KEY)
                                 .build()
@@ -23,6 +25,7 @@ class CivicsHttpClient: OkHttpClient() {
                                 .build()
                         chain.proceed(request)
                     }
+                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
         }
 
