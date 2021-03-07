@@ -1,15 +1,25 @@
 package com.github.mjaremczuk.politicalpreparedness.network
 
+import com.github.mjaremczuk.politicalpreparedness.network.jsonadapter.DateAdapter
+import com.github.mjaremczuk.politicalpreparedness.network.jsonadapter.ElectionAdapter
+import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.ElectionResponse
+import com.github.mjaremczuk.politicalpreparedness.network.models.RepresentativeResponse
+import com.github.mjaremczuk.politicalpreparedness.network.models.VoterInfoResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://www.googleapis.com/civicinfo/v2/"
 
-// TODO: Add adapters for Java Date and custom adapter ElectionAdapter (included in project)
 private val moshi = Moshi.Builder()
+        .add(ElectionAdapter())
+        .add(DateAdapter())
         .add(KotlinJsonAdapterFactory())
         .build()
 
@@ -25,7 +35,20 @@ private val retrofit = Retrofit.Builder()
  */
 
 interface CivicsApiService {
-    //TODO: Add elections API Call
+
+    @GET("elections")
+    suspend fun getElections(): ElectionResponse
+
+    @GET("voterinfo")
+    suspend fun getVoterInfo(
+            @Query("address") address: String,
+            @Query("electionId") electionId: Int,
+            @Query("officialOnly") officialOnly: Boolean = true,
+            @Query("electionId") returnAllAvailableData: Boolean = true,
+    ): VoterInfoResponse
+
+    @GET("representatives")
+    suspend fun getRepresentatives(): RepresentativeResponse
 
     //TODO: Add voterinfo API Call
 
@@ -33,7 +56,6 @@ interface CivicsApiService {
 }
 
 object CivicsApi {
-    val retrofitService: CivicsApiService by lazy {
+    fun create(): CivicsApiService =
         retrofit.create(CivicsApiService::class.java)
-    }
 }
