@@ -22,7 +22,7 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
                 emptyList()
             }
             is Result.Success -> {
-                it.elections.toDomainModel()
+                it.data.toDomainModel()
             }
             is Result.Loading -> {
                 upcomingElections.value
@@ -55,18 +55,12 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
 
     fun onUpcomingClicked(electionModel: ElectionModel) {
         _navigateTo.value = ElectionsFragmentDirections
-                .actionElectionsFragmentToVoterInfoFragment(
-                        electionModel.id,
-                        electionModel.division
-                )
+                .actionElectionsFragmentToVoterInfoFragment(electionModel)
     }
 
     fun onSavedClicked(electionModel: ElectionModel) {
         _navigateTo.value = ElectionsFragmentDirections
-                .actionElectionsFragmentToVoterInfoFragment(
-                        electionModel.id,
-                        electionModel.division
-                )
+                .actionElectionsFragmentToVoterInfoFragment(electionModel)
     }
 
     fun navigateCompleted() {

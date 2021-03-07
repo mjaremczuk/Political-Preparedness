@@ -3,10 +3,12 @@ package com.github.mjaremczuk.politicalpreparedness.database
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import java.lang.IllegalStateException
 
 class LocalDataSource(
         private val database: ElectionDao,
@@ -46,5 +48,9 @@ class LocalDataSource(
         withContext(ioDispatcher) {
             database.deleteAll()
         }
+    }
+
+    override suspend fun getDetails(electionId: Int, address: String): Result<State?> {
+        return Result.Failure(IllegalStateException("No details stored in local db"))
     }
 }

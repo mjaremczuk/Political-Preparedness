@@ -6,12 +6,12 @@ import com.github.mjaremczuk.politicalpreparedness.database.ElectionDatabase
 import com.github.mjaremczuk.politicalpreparedness.database.LocalDataSource
 import com.github.mjaremczuk.politicalpreparedness.election.ElectionsViewModel
 import com.github.mjaremczuk.politicalpreparedness.election.VoterInfoViewModel
+import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.network.CivicsApi
 import com.github.mjaremczuk.politicalpreparedness.network.CivicsApiService
 import com.github.mjaremczuk.politicalpreparedness.network.NetworkDataSource
-import com.github.mjaremczuk.politicalpreparedness.network.models.Division
-import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.DefaultElectionsRepository
+import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
@@ -26,8 +26,8 @@ class PoliticalApplication : Application() {
         super.onCreate()
 
         val module = module {
-            viewModel { (electionId: Int, division: Division) ->
-                VoterInfoViewModel(get(), electionId, division)
+            viewModel { (election: ElectionModel) ->
+                VoterInfoViewModel(get(), election)
             }
             viewModel { ElectionsViewModel(get()) }
 

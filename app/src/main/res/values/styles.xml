@@ -3,24 +3,24 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="fontFamily">@font/arima_madurai</item>
-<!--        <item name="android:fontFamily">@font/arima_madurai_black</item>-->
-<!--        <item name="toolbarStyle">@style/ToolbarStyle</item>-->
-<!--        <item name="android:toolbarStyle">@style/ToolbarStyle</item>-->
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:textViewStyle">@style/DefaultTextStyle</item>
     </style>
 
-    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
-        <item name="fontFamily">@font/arima_madurai_black</item>
-        <item name="android:fontFamily">@font/arima_madurai_black</item>
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="boxBackgroundColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="fontFamily">@font/arima_madurai_black</item>
+    <style name="DefaultTextStyle" parent="Widget.AppCompat.TextView" />
+
+    <style name="HeaderTextStyle" parent="DefaultTextStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/arima_madurai_medium</item>
     </style>
-    <!-- TODO: Add necessary styles -->
 
 </resources>

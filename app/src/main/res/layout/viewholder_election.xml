@@ -16,33 +16,32 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:padding="16dp"
-        android:foreground="?selectableItemBackground"
         android:layout_height="wrap_content"
         android:contentDescription="@{@string/election_name(election.name)}"
-        android:onClick="@{()->listener.onClick(election)}">
+        android:foreground="?selectableItemBackground"
+        android:onClick="@{()->listener.onClick(election)}"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/election_item_name"
+            style="@style/HeaderTextStyle"
             android:layout_width="0dp"
-            android:fontFamily="@font/arima_madurai_medium"
             android:layout_height="wrap_content"
             android:text="@{election.name}"
-            android:textSize="18sp"
-            tools:text="@tools:sample/lorem[3]"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/lorem[3]" />
 
         <TextView
             android:id="@+id/election_item_date"
             android:layout_width="0dp"
-            android:fontFamily="@font/arima_madurai"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/arima_madurai"
             android:text="@{election.electionDay.toLocaleString()}"
-            tools:text="@tools:sample/lorem[3]"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/election_item_name" />
+            app:layout_constraintTop_toBottomOf="@+id/election_item_name"
+            tools:text="@tools:sample/lorem[3]" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

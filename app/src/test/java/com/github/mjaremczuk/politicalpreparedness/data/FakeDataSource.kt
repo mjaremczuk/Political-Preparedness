@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.Result
 
@@ -33,5 +34,9 @@ class FakeDataSource(val elections: MutableList<Election>? = mutableListOf()) : 
 
     override suspend fun deleteAll() {
         this.elections?.clear()
+    }
+
+    override suspend fun getDetails(electionId: Int, address: String): Result<State?> {
+        return Result.Failure(IllegalStateException("No details stored in local db"))
     }
 }

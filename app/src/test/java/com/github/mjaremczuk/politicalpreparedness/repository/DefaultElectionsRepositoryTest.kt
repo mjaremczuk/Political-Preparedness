@@ -47,40 +47,40 @@ class DefaultElectionsRepositoryTest {
     fun getElections_GetElectionsFromRemote() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        assertThat(result.elections, IsEqual(remoteElections))
+        assertThat(result.data, IsEqual(remoteElections))
     }
 
     @Test
     fun getElections_GetElectionsFromLocal() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        assertThat(result.elections, IsEqual(remoteElections))
+        assertThat(result.data, IsEqual(remoteElections))
     }
 
     @Test
     fun markAsSaved_GetElectionsAndMarkOneAsSaved() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        val election = result.elections.first()
+        val election = result.data.first()
         assertThat(election.saved, `is`(false))
 
-        electionsRepository.markAsSaved(result.elections.first(), true)
+        electionsRepository.markAsSaved(result.data.first(), true)
 
         val newResult = electionsRepository.getElections(false) as Result.Success
-        assertThat(newResult.elections.first { it.id == election.id }.saved, `is`(true))
+        assertThat(newResult.data.first { it.id == election.id }.saved, `is`(true))
     }
 
     @Test
     fun refreshElections_GetRemoteElectionDoesNotOverrideSavedStatusForLocalElections() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        val election = result.elections.first()
+        val election = result.data.first()
 
-        electionsRepository.markAsSaved(result.elections.first(), true)
+        electionsRepository.markAsSaved(result.data.first(), true)
         electionsRepository.refreshElections()
 
         val newResult = electionsRepository.getElections(true) as Result.Success
 
-        assertThat(newResult.elections.first { it.id == election.id }.saved, `is`(true))
+        assertThat(newResult.data.first { it.id == election.id }.saved, `is`(true))
     }
 }
