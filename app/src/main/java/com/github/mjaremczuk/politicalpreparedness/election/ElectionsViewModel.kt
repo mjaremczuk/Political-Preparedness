@@ -72,5 +72,4 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
     fun navigateCompleted() {
         _navigateTo.value = null
     }
-    //TODO: Create functions to navigate to saved or upcoming election voter info
 }

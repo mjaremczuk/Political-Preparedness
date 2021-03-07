@@ -25,7 +25,6 @@ class CivicsHttpClient: OkHttpClient() {
                                 .build()
                         chain.proceed(request)
                     }
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
         }
 
