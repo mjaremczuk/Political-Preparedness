@@ -1,10 +1,7 @@
 package com.github.mjaremczuk.politicalpreparedness.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
 
 @Dao
@@ -22,19 +19,19 @@ interface ElectionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(election: Election)
 
+    @Query("UPDATE election_table SET saved = 1 WHERE id = :id AND division_id = :divisionId")
+    suspend fun markAsSaved(id: Int, divisionId: String)
+
+    @Query("UPDATE election_table SET saved = 0 WHERE id = :id AND division_id = :divisionId")
+    suspend fun markAsNotSaved(id: Int, divisionId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAll(election: List<Election>)
 
     @Query("SELECT * FROM election_table WHERE id = :id AND division_id = :divisionId LIMIT 1")
     suspend fun get(id: Int, divisionId: String): Election?
-    //TODO: Add insert query
 
     //TODO: Add select all election query
 
     //TODO: Add select single election query
-
-    //TODO: Add delete query
-
-    //TODO: Add clear query
-
 }

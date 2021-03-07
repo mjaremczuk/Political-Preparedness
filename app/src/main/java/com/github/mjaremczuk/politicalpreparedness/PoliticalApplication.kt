@@ -11,7 +11,7 @@ import com.github.mjaremczuk.politicalpreparedness.network.CivicsApiService
 import com.github.mjaremczuk.politicalpreparedness.network.NetworkDataSource
 import com.github.mjaremczuk.politicalpreparedness.network.models.Division
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
-import com.github.mjaremczuk.politicalpreparedness.repository.ElectionRepository
+import com.github.mjaremczuk.politicalpreparedness.repository.DefaultElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
@@ -36,7 +36,7 @@ class PoliticalApplication : Application() {
             single(qualifier = named("local")) { LocalDataSource(get(), Dispatchers.IO) as ElectionDataSource }
             single(qualifier = named("remote")) { NetworkDataSource(get(), Dispatchers.IO) as ElectionDataSource }
             single {
-                ElectionRepository(
+                DefaultElectionsRepository(
                         get<ElectionDataSource>(qualifier = named("local")),
                         get<ElectionDataSource>(qualifier = named("remote")),
                         Dispatchers.IO,

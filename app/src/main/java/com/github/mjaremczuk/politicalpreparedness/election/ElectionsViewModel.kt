@@ -1,6 +1,7 @@
 package com.github.mjaremczuk.politicalpreparedness.election
 
 import androidx.lifecycle.*
+import androidx.navigation.NavDirections
 import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.network.models.toDomainModel
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
@@ -9,8 +10,11 @@ import kotlinx.coroutines.launch
 
 class ElectionsViewModel(private val repository: ElectionsRepository) : ViewModel() {
 
-    private val _dataLoading = MutableLiveData<Boolean>()
+    private val _dataLoading = MutableLiveData<Boolean>(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
+
+    private val _navigateTo = MutableLiveData<NavDirections?>()
+    val navigateTo: LiveData<NavDirections?> = _navigateTo
 
     private val elections: LiveData<List<ElectionModel>> = Transformations.map(repository.observeElections()) {
         when (it) {
@@ -37,8 +41,8 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
     }
 
     fun refresh() {
+        _dataLoading.value = true
         viewModelScope.launch {
-            _dataLoading.value = true
             refreshElections()
             _dataLoading.value = false
         }
@@ -48,5 +52,25 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
         repository.refreshElections()
     }
 
+
+    fun onUpcomingClicked(electionModel: ElectionModel) {
+        _navigateTo.value = ElectionsFragmentDirections
+                .actionElectionsFragmentToVoterInfoFragment(
+                        electionModel.id,
+                        electionModel.division
+                )
+    }
+
+    fun onSavedClicked(electionModel: ElectionModel) {
+        _navigateTo.value = ElectionsFragmentDirections
+                .actionElectionsFragmentToVoterInfoFragment(
+                        electionModel.id,
+                        electionModel.division
+                )
+    }
+
+    fun navigateCompleted() {
+        _navigateTo.value = null
+    }
     //TODO: Create functions to navigate to saved or upcoming election voter info
 }

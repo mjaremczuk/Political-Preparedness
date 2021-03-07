@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 
-class ElectionRepository(
+class DefaultElectionsRepository(
         private val localDataSource: ElectionDataSource,
         private val networkDataSource: ElectionDataSource,
         private val ioDispatcher: CoroutineDispatcher,
@@ -32,10 +32,6 @@ class ElectionRepository(
                 localDataSource.deleteAll()
                 if (localElections is Result.Success) {
                     val saved = localElections.elections.filter { it.saved }
-//                    elections.elections.map { networkElection ->
-//                        saved.find { it.id == networkElection.id }?.copy(saved = true)
-//                                ?: networkElection
-//                    }
                     elections.elections.map { online ->
                         online.copy(saved = saved.firstOrNull { it.id == online.id }?.saved == true)
                     }
@@ -65,10 +61,4 @@ class ElectionRepository(
             }
         }
     }
-}
-
-sealed class Result<out T> {
-    data class Failure<T>(val exception: Exception) : Result<T>()
-    data class Success<T>(val elections: T) : Result<T>()
-    class Loading<T>() : Result<T>()
 }

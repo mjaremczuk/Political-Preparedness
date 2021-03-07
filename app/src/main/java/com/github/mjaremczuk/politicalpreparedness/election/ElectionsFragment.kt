@@ -24,16 +24,21 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>() {
 
         binding.upcomingElectionsRecycler.adapter =
                 ElectionListAdapter(ElectionListAdapter.ElectionListener {
-                    findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(it.id, it.division))
+                    viewModel.onUpcomingClicked(it)
                 })
 
         binding.savedElectionsRecycler.adapter =
                 ElectionListAdapter(ElectionListAdapter.ElectionListener {
-                    findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(it.id, it.division))
+                    viewModel.onSavedClicked(it)
                 })
         binding.upcomingRefresh.setOnRefreshListener { viewModel.refresh() }
 
-        //TODO: Link elections to voter info
+        viewModel.navigateTo.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.navigateCompleted()
+                findNavController().navigate(it)
+            }
+        }
 
         return binding.root
     }

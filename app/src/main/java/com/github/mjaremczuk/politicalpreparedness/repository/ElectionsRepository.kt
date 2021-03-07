@@ -2,7 +2,6 @@ package com.github.mjaremczuk.politicalpreparedness.repository
 
 import androidx.lifecycle.LiveData
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
-import com.github.mjaremczuk.politicalpreparedness.network.models.VoterInfoResponse
 
 interface ElectionsRepository {
     suspend fun getElections(force: Boolean): Result<List<Election>>
