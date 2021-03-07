@@ -10,5 +10,6 @@ data class ElectionModel(
         val id: Int,
         val name: String,
         val electionDay: Date,
-        val division: Division
+        val division: Division,
+        val saved: Boolean
 ): Parcelable

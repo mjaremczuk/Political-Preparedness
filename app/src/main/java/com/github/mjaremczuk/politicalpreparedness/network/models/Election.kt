@@ -13,7 +13,8 @@ data class Election(
         @PrimaryKey val id: Int,
         @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "electionDay") val electionDay: Date,
-        @Embedded(prefix = "division_") @Json(name = "ocdDivisionId", ) val division: Division
+        @Embedded(prefix = "division_") @Json(name = "ocdDivisionId", ) val division: Division,
+        @ColumnInfo(name = "saved") val saved: Boolean = false
 )
 
 fun List<Election>.toDomainModel(): List<ElectionModel> {
@@ -22,7 +23,8 @@ fun List<Election>.toDomainModel(): List<ElectionModel> {
                 it.id,
                 it.name,
                 it.electionDay,
-                it.division
+                it.division,
+                it.saved
         )
     }
 }

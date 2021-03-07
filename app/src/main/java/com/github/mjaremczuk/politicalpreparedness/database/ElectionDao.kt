@@ -1,7 +1,6 @@
 package com.github.mjaremczuk.politicalpreparedness.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,11 +13,20 @@ interface ElectionDao {
     @Query("SELECT * FROM election_table ORDER BY electionDay ASC")
     fun getAll(): LiveData<List<Election>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveAll(vararg elections: Election)
+    @Query("SELECT * FROM election_table ORDER BY electionDay ASC")
+    fun getAllSync(): List<Election>
+
+    @Query("DELETE FROM election_table")
+    suspend fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(election: Election)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAll(election: List<Election>)
+
+    @Query("SELECT * FROM election_table WHERE id = :id AND division_id = :divisionId LIMIT 1")
+    suspend fun get(id: Int, divisionId: String): Election?
     //TODO: Add insert query
 
     //TODO: Add select all election query

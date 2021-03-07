@@ -1,9 +1,35 @@
 package com.github.mjaremczuk.politicalpreparedness.election
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.mjaremczuk.politicalpreparedness.database.ElectionDao
+import com.github.mjaremczuk.politicalpreparedness.network.models.Division
+import kotlinx.coroutines.launch
 
-class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
+class VoterInfoViewModel(
+        private val dataSource: ElectionDao,
+        private val electionId: Int,
+        private val division: Division
+) : ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            tmpAddOrRemove()
+        }
+    }
+
+    private suspend fun tmpAddOrRemove() {
+        val election = dataSource.get(electionId, division.id)
+        if (election != null) {
+            dataSource.save(election.copy(saved = election.saved.not()))
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            tmpAddOrRemove()
+        }
+    }
 
     //TODO: Add live data to hold voter info
 
