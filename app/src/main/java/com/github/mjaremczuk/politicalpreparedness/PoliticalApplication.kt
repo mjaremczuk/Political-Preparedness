@@ -19,6 +19,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PoliticalApplication : Application() {
 
@@ -35,6 +38,7 @@ class PoliticalApplication : Application() {
             single { CivicsApi.create() as CivicsApiService }
             single(qualifier = named("local")) { LocalDataSource(get(), Dispatchers.IO) as ElectionDataSource }
             single(qualifier = named("remote")) { NetworkDataSource(get(), Dispatchers.IO) as ElectionDataSource }
+            single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat}
             single {
                 DefaultElectionsRepository(
                         get<ElectionDataSource>(qualifier = named("local")),

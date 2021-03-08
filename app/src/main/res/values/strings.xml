@@ -12,6 +12,10 @@
     <string name="voting_location">&lt;a href="%s">Voting locations&lt;/a></string>
     <string name="ballot_information">&lt;a href="%s">Ballot information&lt;/a></string>
     <string name="address">Address</string>
+    <string name="error_failed_load_voter_info">Failed to load details using your location information</string>
+    <string name="error_failed_get_address_from_location">Can\'t get address for you location</string>
+    <string name="error_location_permission_denied">Location permission denied!</string>
+    <string name="error_failed_load_upcoming_elections">Failed to load upcoming elections</string>
 
     <!-- TODO: Add necessary string values -->
 

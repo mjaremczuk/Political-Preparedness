@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mjaremczuk.politicalpreparedness.databinding.ViewholderElectionBinding
 import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
+import java.text.DateFormat
 
-class ElectionListAdapter(private val clickListener: ElectionListener) : ListAdapter<ElectionModel, ElectionListAdapter.ElectionViewHolder>(ElectionDiffCallback) {
+class ElectionListAdapter(val dateFormatter: DateFormat, private val clickListener: ElectionListener) : ListAdapter<ElectionModel, ElectionListAdapter.ElectionViewHolder>(ElectionDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ElectionViewHolder {
         return ElectionViewHolder.from(parent)
@@ -16,7 +17,7 @@ class ElectionListAdapter(private val clickListener: ElectionListener) : ListAda
 
     override fun onBindViewHolder(holder: ElectionViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, clickListener)
+        holder.bind(item, clickListener, dateFormatter)
     }
 
     companion object ElectionDiffCallback : DiffUtil.ItemCallback<ElectionModel>() {
@@ -45,13 +46,12 @@ class ElectionListAdapter(private val clickListener: ElectionListener) : ListAda
             )
         }
 
-        fun bind(election: ElectionModel, listener: ElectionListener) {
+        fun bind(election: ElectionModel, listener: ElectionListener, dateFormatter: DateFormat) {
             binding.election = election
             binding.listener = listener
+            binding.dateFormatter = dateFormatter
             binding.executePendingBindings()
         }
     }
 
 }
-
-//TODO: Create ElectionViewHolder

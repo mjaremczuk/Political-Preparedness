@@ -9,7 +9,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.not
 import org.hamcrest.core.IsEqual
+import org.hamcrest.core.IsInstanceOf
+import org.hamcrest.core.IsNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -82,5 +85,21 @@ class DefaultElectionsRepositoryTest {
         val newResult = electionsRepository.getElections(true) as Result.Success
 
         assertThat(newResult.data.first { it.id == election.id }.saved, `is`(true))
+    }
+
+    @Test
+    fun getElectionDetails_ReturnError() = mainCoroutineRule.runBlockingTest {
+        electionsRemoteDataSource.showDetailsError = true
+        val result = electionsRepository.getElectionDetails(1, "address")
+
+        assertThat(result, IsInstanceOf(Result.Failure::class.java))
+    }
+
+    @Test
+    fun getElectionDetails_GetState() = mainCoroutineRule.runBlockingTest {
+        val result = electionsRepository.getElectionDetails(1, "address")
+
+        assertThat(result, IsInstanceOf(Result.Success::class.java))
+        assertThat((result as Result.Success).data, not(IsNull()))
     }
 }

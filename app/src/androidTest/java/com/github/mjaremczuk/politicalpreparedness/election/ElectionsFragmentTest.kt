@@ -13,6 +13,7 @@ import androidx.test.filters.MediumTest
 import com.github.mjaremczuk.politicalpreparedness.BaseFragmentTest
 import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
+import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.network.models.Division
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
 import com.github.mjaremczuk.politicalpreparedness.util.RecyclerViewItemCountAssertion
@@ -92,7 +93,7 @@ class ElectionsFragmentTest : BaseFragmentTest() {
         onView(withId(R.id.upcoming_elections_recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition<ElectionListAdapter.ElectionViewHolder>(0, click()))
 
-        verify(navController).navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(1, Division("1", "us", "al")))
+        verify(navController).navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election1.toDomainModel()))
     }
 
     @Test
@@ -111,7 +112,7 @@ class ElectionsFragmentTest : BaseFragmentTest() {
         onView(withId(R.id.saved_elections_recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition<ElectionListAdapter.ElectionViewHolder>(0, click()))
 
-        verify(navController).navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(3, Division("3", "us", "cl")))
+        verify(navController).navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election3.toDomainModel()))
     }
 
     @Test
@@ -137,3 +138,13 @@ class ElectionsFragmentTest : BaseFragmentTest() {
                 .check(RecyclerViewItemCountAssertion.withItemCount(0))
     }
 }
+
+private fun Election.toDomainModel() =
+        ElectionModel(
+                id,
+                name,
+                electionDay,
+                division,
+                saved
+        )
+

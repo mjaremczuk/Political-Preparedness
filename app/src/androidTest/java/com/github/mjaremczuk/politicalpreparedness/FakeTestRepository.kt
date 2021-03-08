@@ -2,7 +2,10 @@ package com.github.mjaremczuk.politicalpreparedness
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.github.mjaremczuk.politicalpreparedness.network.models.Address
+import com.github.mjaremczuk.politicalpreparedness.network.models.AdministrationBody
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.repository.Result
 import kotlinx.coroutines.runBlocking
@@ -48,4 +51,30 @@ class FakeTestRepository : ElectionsRepository {
         electionsServiceData = linkedMapOf()
     }
 
+    override suspend fun getElectionDetails(electionId: Int, address: String): Result<State?> {
+        return if (shouldReturnError) {
+            Result.Failure(Exception("Test exception"))
+        } else {
+            Result.Success(
+                    fakeStateData()
+            )
+        }
+    }
+
+    private fun fakeStateData() = State(
+            name = "Alabama",
+            electionAdministrationBody = AdministrationBody(
+                    name = "Administration name",
+                    electionInfoUrl = "https://www.google.com/info_url",
+                    votingLocationFinderUrl = "https://www.google.com/votin_location_url",
+                    ballotInfoUrl = "https://www.google.com/ballon_info_url",
+                    correspondenceAddress = Address(
+                            line1 = "Line one address",
+                            line2 = "Line 2 address",
+                            city = "City",
+                            state = "State",
+                            zip = "471283"
+                    )
+            )
+    )
 }

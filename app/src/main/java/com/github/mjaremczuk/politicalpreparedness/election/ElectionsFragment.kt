@@ -7,14 +7,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
+import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentElectionBinding
 import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.github.mjaremczuk.politicalpreparedness.utils.LocationPermissionsUtil
 import org.koin.android.ext.android.inject
+import java.text.DateFormat
 
 class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationPermissionsUtil.PermissionListener {
 
     private val viewModel: ElectionsViewModel by inject()
+    val dateFormatter: DateFormat by inject()
 
     private val permissionUtil = LocationPermissionsUtil(this)
 
@@ -27,12 +30,12 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationP
         binding.lifecycleOwner = this
 
         binding.upcomingElectionsRecycler.adapter =
-                ElectionListAdapter(ElectionListAdapter.ElectionListener {
+                ElectionListAdapter(dateFormatter, ElectionListAdapter.ElectionListener {
                     viewModel.onUpcomingClicked(it)
                 })
 
         binding.savedElectionsRecycler.adapter =
-                ElectionListAdapter(ElectionListAdapter.ElectionListener {
+                ElectionListAdapter(dateFormatter, ElectionListAdapter.ElectionListener {
                     viewModel.onSavedClicked(it)
                 })
         binding.upcomingRefresh.setOnRefreshListener { viewModel.refresh() }
@@ -43,13 +46,17 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationP
                 findNavController().navigate(it)
             }
         }
-        permissionUtil.requestPermissions(this)
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        permissionUtil.requestPermissions(this)
+    }
+
     override fun onDestroyView() {
+        permissionUtil.unregister()
         super.onDestroyView()
-        _binding = null
     }
 
     override fun onGranted() {
@@ -57,6 +64,10 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationP
     }
 
     override fun onDenied() {
-        Toast.makeText(requireContext(),"Location permission denied!", Toast.LENGTH_LONG).show()
+        showToast(getString(R.string.error_location_permission_denied))
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 }

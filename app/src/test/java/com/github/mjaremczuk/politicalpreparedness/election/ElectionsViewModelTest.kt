@@ -28,18 +28,18 @@ class ElectionsViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var tasksRepository: FakeTestRepository
+    private lateinit var electionsRepository: FakeTestRepository
     private lateinit var electionsViewModel: ElectionsViewModel
 
     @Before
     fun setupViewModel() {
-        tasksRepository = FakeTestRepository()
+        electionsRepository = FakeTestRepository()
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
         val election2 = Election(2, "Title2", Date(), Division("2", "us", "ga"))
         val election3 = Election(3, "Title3", Date(), Division("3", "us", "cl"))
-        tasksRepository.addElections(election1, election2, election3)
+        electionsRepository.addElections(election1, election2, election3)
 
-        electionsViewModel = ElectionsViewModel(tasksRepository)
+        electionsViewModel = ElectionsViewModel(electionsRepository)
     }
 
     @Test
@@ -67,7 +67,7 @@ class ElectionsViewModelTest {
 
     @Test
     fun refresh_LoadUpcomingAndSavedElections() {
-        tasksRepository.addElections(Election(1, "Title1", Date(), Division("1", "us", "al")).copy(saved = true))
+        electionsRepository.addElections(Election(1, "Title1", Date(), Division("1", "us", "al")).copy(saved = true))
         electionsViewModel.refresh()
 
         assertThat(electionsViewModel.upcomingElections.getOrAwaitValue().isEmpty(), matches(false))
