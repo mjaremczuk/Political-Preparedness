@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.`is` as matches
 import org.hamcrest.Matchers.not
 import org.hamcrest.core.IsEqual
 import org.hamcrest.core.IsInstanceOf
@@ -65,12 +65,12 @@ class DefaultElectionsRepositoryTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
         val election = result.data.first()
-        assertThat(election.saved, `is`(false))
+        assertThat(election.saved, matches(false))
 
         electionsRepository.markAsSaved(result.data.first(), true)
 
         val newResult = electionsRepository.getElections(false) as Result.Success
-        assertThat(newResult.data.first { it.id == election.id }.saved, `is`(true))
+        assertThat(newResult.data.first { it.id == election.id }.saved, matches(true))
     }
 
     @Test
@@ -84,7 +84,7 @@ class DefaultElectionsRepositoryTest {
 
         val newResult = electionsRepository.getElections(true) as Result.Success
 
-        assertThat(newResult.data.first { it.id == election.id }.saved, `is`(true))
+        assertThat(newResult.data.first { it.id == election.id }.saved, matches(true))
     }
 
     @Test

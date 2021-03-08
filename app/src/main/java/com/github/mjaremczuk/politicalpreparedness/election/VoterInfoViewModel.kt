@@ -36,7 +36,6 @@ class VoterInfoViewModel(
     val navigateBack: LiveData<Boolean>
         get() = _navigateBack
 
-
     fun loadDetails(address: Address?) {
         viewModelScope.launch {
             val exactAddress = "${address?.getAddressLine(0)}"

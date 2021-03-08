@@ -60,7 +60,7 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationP
     }
 
     override fun onGranted() {
-
+//  do nothing on this screen
     }
 
     override fun onDenied() {

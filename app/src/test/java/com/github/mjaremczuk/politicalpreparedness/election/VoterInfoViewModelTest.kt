@@ -11,7 +11,7 @@ import com.github.mjaremczuk.politicalpreparedness.network.models.Division
 import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.`is` as matches
 import org.hamcrest.Matchers.not
 import org.hamcrest.core.IsInstanceOf
 import org.hamcrest.core.IsNull
@@ -58,20 +58,20 @@ class VoterInfoViewModelTest {
         voterInfoViewModel.loadDetails(address)
 
         assertThat(voterInfoViewModel.electionDetails.getOrAwaitValue(), IsNull())
-        assertThat(voterInfoViewModel.errorMessage.getOrAwaitValue(), `is`(R.string.error_failed_load_voter_info))
+        assertThat(voterInfoViewModel.errorMessage.getOrAwaitValue(), matches(R.string.error_failed_load_voter_info))
     }
 
     @Test
     fun actionClick_FollowElection() {
         voterInfoViewModel.onActionClick()
 
-        assertThat(voterInfoViewModel.navigateBack.getOrAwaitValue(), `is`(true))
+        assertThat(voterInfoViewModel.navigateBack.getOrAwaitValue(), matches(true))
     }
 
     @Test
     fun navigateCompleted_SetNavigateBackToFalse() {
         voterInfoViewModel.navigateCompleted()
 
-        assertThat(voterInfoViewModel.navigateBack.getOrAwaitValue(), `is`(false))
+        assertThat(voterInfoViewModel.navigateBack.getOrAwaitValue(), matches(false))
     }
 }

@@ -40,7 +40,6 @@ fun bindRefreshing(refreshView: SwipeRefreshLayout, loading: Boolean?) {
     refreshView.isRefreshing = loading == true
 }
 
-
 @BindingAdapter("voterActionLabel")
 fun bindButtonText(textView: TextView, saved: Boolean?) {
     if (saved != null) {
