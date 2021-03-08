@@ -23,4 +23,13 @@
         <item name="android:fontFamily">@font/arima_madurai_medium</item>
     </style>
 
+    <style name="VoterInfoToolbarTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/arima_madurai_medium</item>
+    </style>
+
+    <style name="ListHeader">
+        <item name="fontFamily">@font/arima_madurai_medium</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>

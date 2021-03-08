@@ -8,11 +8,16 @@
         <variable
             name="representative"
             type="com.github.mjaremczuk.politicalpreparedness.representative.model.Representative" />
+
+        <variable
+            name="listener"
+            type="com.github.mjaremczuk.politicalpreparedness.representative.adapter.RepresentativeListAdapter.RepresentativeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{()->listener.onClick(representative)}">
 
         <ImageView
             android:id="@+id/representative_photo"
@@ -43,6 +48,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="8dp"
+            android:visibility="gone"
             android:src="@drawable/ic_facebook"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/twitter_icon"
@@ -53,6 +59,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="8dp"
+            android:visibility="gone"
             android:src="@drawable/ic_twitter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/www_icon"

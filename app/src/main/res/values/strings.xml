@@ -4,7 +4,7 @@
     <string name="representatives_button">Find my representatives</string>
     <string name="upcoming_elections">Upcoming elections</string>
     <string name="launch_logo_description">Home screen logo</string>
-    <string name="election_name">%s election</string>
+    <string name="election_name">%s</string>
     <string name="upcoming_elections_header">Upcoming elections</string>
     <string name="saved_elections_header">Saved elections</string>
     <string name="voter_remove_from_saved">Unfollow election</string>
