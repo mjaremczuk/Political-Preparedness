@@ -8,8 +8,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.`is` as matches
+import org.hamcrest.Matchers.not
 import org.hamcrest.core.IsEqual
+import org.hamcrest.core.IsInstanceOf
+import org.hamcrest.core.IsNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -47,40 +50,56 @@ class DefaultElectionsRepositoryTest {
     fun getElections_GetElectionsFromRemote() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        assertThat(result.elections, IsEqual(remoteElections))
+        assertThat(result.data, IsEqual(remoteElections))
     }
 
     @Test
     fun getElections_GetElectionsFromLocal() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        assertThat(result.elections, IsEqual(remoteElections))
+        assertThat(result.data, IsEqual(remoteElections))
     }
 
     @Test
     fun markAsSaved_GetElectionsAndMarkOneAsSaved() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        val election = result.elections.first()
-        assertThat(election.saved, `is`(false))
+        val election = result.data.first()
+        assertThat(election.saved, matches(false))
 
-        electionsRepository.markAsSaved(result.elections.first(), true)
+        electionsRepository.markAsSaved(result.data.first(), true)
 
         val newResult = electionsRepository.getElections(false) as Result.Success
-        assertThat(newResult.elections.first { it.id == election.id }.saved, `is`(true))
+        assertThat(newResult.data.first { it.id == election.id }.saved, matches(true))
     }
 
     @Test
     fun refreshElections_GetRemoteElectionDoesNotOverrideSavedStatusForLocalElections() = mainCoroutineRule.runBlockingTest {
         val result = electionsRepository.getElections(true) as Result.Success
 
-        val election = result.elections.first()
+        val election = result.data.first()
 
-        electionsRepository.markAsSaved(result.elections.first(), true)
+        electionsRepository.markAsSaved(result.data.first(), true)
         electionsRepository.refreshElections()
 
         val newResult = electionsRepository.getElections(true) as Result.Success
 
-        assertThat(newResult.elections.first { it.id == election.id }.saved, `is`(true))
+        assertThat(newResult.data.first { it.id == election.id }.saved, matches(true))
+    }
+
+    @Test
+    fun getElectionDetails_ReturnError() = mainCoroutineRule.runBlockingTest {
+        electionsRemoteDataSource.showDetailsError = true
+        val result = electionsRepository.getElectionDetails(1, "address")
+
+        assertThat(result, IsInstanceOf(Result.Failure::class.java))
+    }
+
+    @Test
+    fun getElectionDetails_GetState() = mainCoroutineRule.runBlockingTest {
+        val result = electionsRepository.getElectionDetails(1, "address")
+
+        assertThat(result, IsInstanceOf(Result.Success::class.java))
+        assertThat((result as Result.Success).data, not(IsNull()))
     }
 }

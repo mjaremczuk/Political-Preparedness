@@ -2,6 +2,7 @@ package com.github.mjaremczuk.politicalpreparedness.election.model
 
 import android.os.Parcelable
 import com.github.mjaremczuk.politicalpreparedness.network.models.Division
+import com.github.mjaremczuk.politicalpreparedness.network.models.Election
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -12,4 +13,13 @@ data class ElectionModel(
         val electionDay: Date,
         val division: Division,
         val saved: Boolean
-): Parcelable
+) : Parcelable
+
+fun ElectionModel.toDataModel() =
+        Election(
+                id = id,
+                name = name,
+                electionDay = electionDay,
+                division = division,
+                saved = saved
+        )

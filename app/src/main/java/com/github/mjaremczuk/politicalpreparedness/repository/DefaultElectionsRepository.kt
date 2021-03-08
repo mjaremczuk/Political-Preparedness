@@ -1,6 +1,7 @@
 package com.github.mjaremczuk.politicalpreparedness.repository
 
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -31,12 +32,12 @@ class DefaultElectionsRepository(
                 val localElections = localDataSource.getElections()
                 localDataSource.deleteAll()
                 if (localElections is Result.Success) {
-                    val saved = localElections.elections.filter { it.saved }
-                    elections.elections.map { online ->
+                    val saved = localElections.data.filter { it.saved }
+                    elections.data.map { online ->
                         online.copy(saved = saved.firstOrNull { it.id == online.id }?.saved == true)
                     }
                 } else {
-                    elections.elections
+                    elections.data
                 }.run { localDataSource.saveElections(this) }
             } else if (elections is Result.Failure) {
                 throw elections.exception
@@ -59,6 +60,12 @@ class DefaultElectionsRepository(
             coroutineScope {
                 localDataSource.markAsSaved(election.copy(saved = saved))
             }
+        }
+    }
+
+    override suspend fun getElectionDetails(electionId: Int, address: String): Result<State?> {
+        return withContext(ioDispatcher) {
+            networkDataSource.getDetails(electionId, address)
         }
     }
 }

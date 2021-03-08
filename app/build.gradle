@@ -145,6 +145,8 @@ dependencies {
     implementation "androidx.fragment:fragment-testing:$version_fragment"
     implementation "androidx.test:core:$version_androidx_test_core"
     implementation "androidx.fragment:fragment-ktx:$version_fragment"
+    implementation "androidx.activity:activity:$version_activity"
+    implementation "androidx.activity:activity-ktx:$version_activity"
 
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestUtil 'androidx.test:orchestrator:1.3.0'

@@ -3,6 +3,7 @@ package com.github.mjaremczuk.politicalpreparedness.network
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.Result
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,6 +24,18 @@ class NetworkDataSource(
                 Result.Failure(ex)
             }
             _upcomingElections.postValue(result)
+            result
+        }
+    }
+
+    override suspend fun getDetails(electionId: Int, address: String): Result<State?> {
+        return withContext(ioDispatcher) {
+            val result = try {
+                Result.Success(apiService.getVoterInfo(address, electionId).state?.first())
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                Result.Failure(ex)
+            }
             result
         }
     }

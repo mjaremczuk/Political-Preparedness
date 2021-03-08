@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class ElectionsViewModel(private val repository: ElectionsRepository) : ViewModel() {
 
-    private val _dataLoading = MutableLiveData<Boolean>(false)
+    private val _dataLoading = MutableLiveData(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
     private val _navigateTo = MutableLiveData<NavDirections?>()
@@ -22,7 +22,7 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
                 emptyList()
             }
             is Result.Success -> {
-                it.elections.toDomainModel()
+                it.data.toDomainModel()
             }
             is Result.Loading -> {
                 upcomingElections.value
@@ -52,21 +52,14 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
         repository.refreshElections()
     }
 
-
     fun onUpcomingClicked(electionModel: ElectionModel) {
         _navigateTo.value = ElectionsFragmentDirections
-                .actionElectionsFragmentToVoterInfoFragment(
-                        electionModel.id,
-                        electionModel.division
-                )
+                .actionElectionsFragmentToVoterInfoFragment(electionModel)
     }
 
     fun onSavedClicked(electionModel: ElectionModel) {
         _navigateTo.value = ElectionsFragmentDirections
-                .actionElectionsFragmentToVoterInfoFragment(
-                        electionModel.id,
-                        electionModel.division
-                )
+                .actionElectionsFragmentToVoterInfoFragment(electionModel)
     }
 
     fun navigateCompleted() {
