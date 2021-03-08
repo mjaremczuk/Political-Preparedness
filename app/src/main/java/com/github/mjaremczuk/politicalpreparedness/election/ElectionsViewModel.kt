@@ -17,7 +17,6 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
     val navigateTo: LiveData<NavDirections?> = _navigateTo
 
     private val elections: LiveData<List<ElectionModel>> = Transformations.map(repository.observeElections()) {
-        _dataLoading.value = false
         when (it) {
             is Result.Failure -> {
                 emptyList()
@@ -45,13 +44,13 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
         _dataLoading.value = true
         viewModelScope.launch {
             refreshElections()
+            _dataLoading.value = false
         }
     }
 
     private suspend fun refreshElections() {
         repository.refreshElections()
     }
-
 
     fun onUpcomingClicked(electionModel: ElectionModel) {
         _navigateTo.value = ElectionsFragmentDirections

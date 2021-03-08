@@ -9,7 +9,6 @@
             name="viewModel"
             type="com.github.mjaremczuk.politicalpreparedness.election.ElectionsViewModel" />
     </data>
-    <!-- TODO: Add node to connect Election ViewModel -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

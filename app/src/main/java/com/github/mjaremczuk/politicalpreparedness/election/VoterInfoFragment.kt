@@ -59,8 +59,10 @@ class VoterInfoFragment : DataBindFragment<FragmentVoterInfoBinding>(), Location
             }
         }
 
-        viewModel.electionDetails.observe(viewLifecycleOwner) {
-            binding.constraintLayout.transitionToEnd()
+        viewModel.electionDetails.observe(viewLifecycleOwner) { state ->
+            state?.let {
+                binding.constraintLayout.transitionToEnd()
+            }
         }
         return binding.root
     }
