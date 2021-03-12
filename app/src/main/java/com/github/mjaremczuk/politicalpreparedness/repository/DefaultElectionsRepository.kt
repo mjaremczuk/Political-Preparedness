@@ -1,7 +1,7 @@
 package com.github.mjaremczuk.politicalpreparedness.repository
 
-import com.github.mjaremczuk.politicalpreparedness.network.models.Election
-import com.github.mjaremczuk.politicalpreparedness.network.models.State
+import com.github.mjaremczuk.politicalpreparedness.network.models.*
+import com.github.mjaremczuk.politicalpreparedness.representative.model.Representative
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -68,4 +68,24 @@ class DefaultElectionsRepository(
             networkDataSource.getDetails(electionId, address)
         }
     }
+
+    override suspend fun searchRepresentatives(address: Address): Result<List<Representative>> {
+        return withContext(ioDispatcher) {
+            Thread.sleep(5_000)
+            return@withContext Result.Success(listOf(
+                    dummyRepresentative("Official address"),
+                    dummyRepresentative("Official address2"),
+                    dummyRepresentative("Official address3"),
+                    dummyRepresentative("Official address4"),
+                    dummyRepresentative("Official address5"),
+                    dummyRepresentative("Official address6"),
+                    dummyRepresentative("Official address7"),
+            ))
+        }
+    }
+
+    private fun dummyRepresentative(officialName: String) = Representative(
+            Official(officialName, emptyList(), "party?", listOf("111 332 543", "423125523"), listOf("https://www.google.com"), null, null),
+            Office("Test office", Division("division-id", "US", "Alabama"), emptyList())
+    )
 }

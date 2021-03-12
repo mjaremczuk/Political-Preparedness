@@ -58,13 +58,9 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding) : R
     fun bind(item: Representative, clickListener: RepresentativeListAdapter.RepresentativeListener) {
         binding.representative = item
         binding.listener = clickListener
-        binding.executePendingBindings()
         binding.representativePhoto.setImageResource(R.drawable.ic_profile)
         showSocialLinks(item.official.channels.orEmpty())
         showWWWLinks(item.official.urls.orEmpty())
-
-        //TODO: Show social links ** Hint: Use provided helper methods
-        //TODO: Show www link ** Hint: Use provided helper methods
 
         binding.executePendingBindings()
     }
@@ -82,7 +78,9 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding) : R
     }
 
     private fun showWWWLinks(urls: List<String>) {
-        enableLink(binding.wwwIcon, urls.first())
+        if (urls.isEmpty().not()) {
+            enableLink(binding.wwwIcon, urls.first())
+        }
     }
 
     private fun getFacebookUrl(channels: List<Channel>): String? {

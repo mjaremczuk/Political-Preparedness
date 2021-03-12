@@ -13,6 +13,7 @@ import com.github.mjaremczuk.politicalpreparedness.network.NetworkDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.DefaultElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
+import com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -33,7 +34,7 @@ class PoliticalApplication : Application() {
                 VoterInfoViewModel(get(), election)
             }
             viewModel { ElectionsViewModel(get()) }
-
+            viewModel { RepresentativeViewModel(get()) }
             single { ElectionDatabase.getInstance(this@PoliticalApplication).electionDao as ElectionDao }
             single { CivicsApi.create() as CivicsApiService }
             single(qualifier = named("local")) { LocalDataSource(get(), Dispatchers.IO) as ElectionDataSource }

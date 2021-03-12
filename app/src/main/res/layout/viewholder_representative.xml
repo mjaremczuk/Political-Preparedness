@@ -41,15 +41,15 @@
             app:layout_constraintStart_toEndOf="@+id/representative_photo"
             app:layout_constraintTop_toTopOf="@+id/representative_photo"
             app:layout_goneMarginEnd="16dp"
-            tools:text='@tools:sample/lorem[12]' />
+            tools:text='@tools:sample/lorem[19]' />
 
         <ImageView
             android:id="@+id/facebook_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="8dp"
-            android:visibility="gone"
             android:src="@drawable/ic_facebook"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/twitter_icon"
             app:layout_constraintTop_toTopOf="parent" />
@@ -59,8 +59,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="8dp"
-            android:visibility="gone"
             android:src="@drawable/ic_twitter"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/www_icon"
             app:layout_constraintTop_toTopOf="parent" />
@@ -72,6 +72,7 @@
             android:layout_marginEnd="16dp"
             android:padding="8dp"
             android:src="@drawable/ic_www"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
