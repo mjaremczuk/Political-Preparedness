@@ -3,10 +3,7 @@ package com.github.mjaremczuk.politicalpreparedness.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
-import com.github.mjaremczuk.politicalpreparedness.network.models.Address
-import com.github.mjaremczuk.politicalpreparedness.network.models.AdministrationBody
-import com.github.mjaremczuk.politicalpreparedness.network.models.Election
-import com.github.mjaremczuk.politicalpreparedness.network.models.State
+import com.github.mjaremczuk.politicalpreparedness.network.models.*
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.Result
 
@@ -45,6 +42,14 @@ class FakeDataSource(val elections: MutableList<Election>? = mutableListOf()) : 
             Result.Failure(IllegalStateException("Failed to get details!"))
         } else {
             Result.Success(fakeStateData())
+        }
+    }
+
+    override suspend fun getRepresentatives(address: Address): Result<RepresentativeResponse> {
+        return if (showDetailsError) {
+            Result.Failure(IllegalStateException("Failed to get details!"))
+        } else {
+            Result.Failure(IllegalStateException("Failed to get details!"))//
         }
     }
 

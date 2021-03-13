@@ -2,7 +2,9 @@ package com.github.mjaremczuk.politicalpreparedness.network
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.github.mjaremczuk.politicalpreparedness.network.models.Address
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.RepresentativeResponse
 import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.Result
@@ -37,6 +39,16 @@ class NetworkDataSource(
                 Result.Failure(ex)
             }
             result
+        }
+    }
+
+    override suspend fun getRepresentatives(address: Address): Result<RepresentativeResponse> {
+        return withContext(ioDispatcher) {
+            try {
+                Result.Success(apiService.getRepresentatives(address.toFormattedString()))
+            } catch (ex: java.lang.Exception) {
+                Result.Failure(ex)
+            }
         }
     }
 

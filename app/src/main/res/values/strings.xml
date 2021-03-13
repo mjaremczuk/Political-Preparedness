@@ -29,6 +29,9 @@
     <string name="error_missing_state">State field is required</string>
     <string name="error_missing_zip">Zip field is required</string>
     <string name="representative_no">%s from %s</string>
+    <string name="representative_fb">%s facebook page</string>
+    <string name="representative_twitter">%s twitted</string>
+    <string name="representative_www">%s web page</string>
 
     <!-- TODO: Add necessary string values -->
 

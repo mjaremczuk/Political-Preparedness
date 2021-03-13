@@ -22,12 +22,9 @@ class RepresentativeViewModel(private val repository: ElectionsRepository) : Vie
     private val _zip = MutableLiveData("")
     val zip: MutableLiveData<String> = _zip
 
-    private val _dataLoading: MutableLiveData<Boolean> = MutableLiveData()
-    val dataLoading: LiveData<Boolean> = _dataLoading
-
-    private val _message: MutableLiveData<Int?> = SingleLiveEvent()
-    val message: LiveData<Int?>
-        get() = _message
+    val dataLoading: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    val message: SingleLiveEvent<Int> = SingleLiveEvent()
+    val messageString = SingleLiveEvent<String>()
 
     private val _representatives: MutableLiveData<Result<List<Representative>>> = MutableLiveData()
     val representatives: LiveData<List<Representative>> = Transformations.map(_representatives) {
@@ -44,7 +41,6 @@ class RepresentativeViewModel(private val repository: ElectionsRepository) : Vie
         _city.value = address.city
         _state.value = address.state
         _zip.value = address.zip
-        println("My location: $address")
         searchRepresentativesIfFormValid(address)
     }
 
@@ -59,22 +55,21 @@ class RepresentativeViewModel(private val repository: ElectionsRepository) : Vie
     }
 
     private fun searchRepresentativesIfFormValid(address: Address) {
-        println("My location searchRepresentativesIfFormValid: $address")
         viewModelScope.launch {
             if (address.line1.isBlank()) {
-                _message.value = R.string.error_missing_first_line_address
+                message.value = R.string.error_missing_first_line_address
                 return@launch
             }
             if (address.city.isBlank()) {
-                _message.value = R.string.error_missing_city
+                message.value = R.string.error_missing_city
                 return@launch
             }
             if (address.state.isBlank()) {
-                _message.value = R.string.error_missing_state
+                message.value = R.string.error_missing_state
                 return@launch
             }
             if (address.zip.isBlank()) {
-                _message.value = R.string.error_missing_zip
+                message.value = R.string.error_missing_zip
                 return@launch
             }
             search(address)
@@ -82,32 +77,19 @@ class RepresentativeViewModel(private val repository: ElectionsRepository) : Vie
     }
 
     private suspend fun search(address: Address) {
-        _dataLoading.value = true
+        dataLoading.value = true
         _representatives.value = repository.searchRepresentatives(address)
-        _dataLoading.value = false
+        when (val result = _representatives.value) {
+            is Result.Failure -> messageString.value = result.exception.message
+            is Result.Success,
+            is Result.Loading,
+            null -> {
+            }
+        }
+        dataLoading.value = false
     }
 
     fun setState(state: String?) {
-        _state.value = state
+        _state.value = state.orEmpty()
     }
-
-    //TODO: Establish live data for representatives and address
-
-    //TODO: Create function to fetch representatives from API from a provided address
-
-    /**
-     *  The following code will prove helpful in constructing a representative from the API. This code combines the two nodes of the RepresentativeResponse into a single official :
-
-    val (offices, officials) = getRepresentativesDeferred.await()
-    _representatives.value = offices.flatMap { office -> office.getRepresentatives(officials) }
-
-    Note: getRepresentatives in the above code represents the method used to fetch data from the API
-    Note: _representatives in the above code represents the established mutable live data housing representatives
-
-     */
-
-    //TODO: Create function get address from geo location
-
-    //TODO: Create function to get address from individual fields
-
 }

@@ -13,11 +13,15 @@ import androidx.annotation.RequiresPermission
 import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
 import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentRepresentativeBinding
+import com.github.mjaremczuk.politicalpreparedness.election.fadeIn
+import com.github.mjaremczuk.politicalpreparedness.election.fadeOut
 import com.github.mjaremczuk.politicalpreparedness.network.models.Address
 import com.github.mjaremczuk.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import com.github.mjaremczuk.politicalpreparedness.utils.LocationPermissionsUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -56,6 +60,12 @@ class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>(), Locati
                 showSnackbar(getString(it))
             }
         }
+
+        viewModel.messageString.observe(viewLifecycleOwner) {
+            it?.let {
+                showSnackbar(it)
+            }
+        }
         viewModel.dataLoading.observe(viewLifecycleOwner) {
             if (it) {
                 hideKeyboard()
@@ -80,12 +90,25 @@ class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>(), Locati
 
     @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
     private fun getLocation() {
-        fusedLocationClient.lastLocation
-                .addOnSuccessListener { location ->
-                    location?.let {
-                        val address = geoCodeLocation(it)
-                        viewModel.searchForRepresentatives(address)
-                    }
+        binding.representativesLoading.fadeIn()
+        fusedLocationClient.getCurrentLocation(100, object : CancellationToken() {
+            override fun isCancellationRequested(): Boolean {
+                return false
+            }
+
+            override fun onCanceledRequested(p0: OnTokenCanceledListener): CancellationToken {
+                return this
+            }
+
+        }).addOnSuccessListener {
+            val address = geoCodeLocation(it)
+            viewModel.searchForRepresentatives(address)
+        }
+                .addOnCompleteListener {
+                    binding.representativesLoading.fadeOut()
+                }
+                .addOnFailureListener {
+                    binding.representativesLoading.fadeOut()
                 }
     }
 

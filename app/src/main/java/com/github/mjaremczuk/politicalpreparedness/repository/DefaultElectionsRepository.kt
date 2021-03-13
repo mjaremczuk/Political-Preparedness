@@ -1,10 +1,17 @@
 package com.github.mjaremczuk.politicalpreparedness.repository
 
-import com.github.mjaremczuk.politicalpreparedness.network.models.*
+import com.github.mjaremczuk.politicalpreparedness.network.models.Address
+import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.network.models.ErrorResponse
+import com.github.mjaremczuk.politicalpreparedness.network.models.State
 import com.github.mjaremczuk.politicalpreparedness.representative.model.Representative
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+
 
 class DefaultElectionsRepository(
         private val localDataSource: ElectionDataSource,
@@ -71,21 +78,30 @@ class DefaultElectionsRepository(
 
     override suspend fun searchRepresentatives(address: Address): Result<List<Representative>> {
         return withContext(ioDispatcher) {
-            Thread.sleep(5_000)
-            return@withContext Result.Success(listOf(
-                    dummyRepresentative("Official address"),
-                    dummyRepresentative("Official address2"),
-                    dummyRepresentative("Official address3"),
-                    dummyRepresentative("Official address4"),
-                    dummyRepresentative("Official address5"),
-                    dummyRepresentative("Official address6"),
-                    dummyRepresentative("Official address7"),
-            ))
+            when (val response = networkDataSource.getRepresentatives(address)) {
+                is Result.Failure -> Result.Failure(mapErrorResponse(response.exception))
+                is Result.Success -> {
+                    val officials = response.data.officials
+                    val representatives = response.data.offices
+                            .map {
+                                it.getRepresentatives(officials)
+                            }.flatten()
+                    Result.Success(representatives)
+                }
+                is Result.Loading -> Result.Loading()
+            }
         }
     }
 
-    private fun dummyRepresentative(officialName: String) = Representative(
-            Official(officialName, emptyList(), "party?", listOf("111 332 543", "423125523"), listOf("https://www.google.com"), null, null),
-            Office("Test office", Division("division-id", "US", "Alabama"), emptyList())
-    )
+    private fun mapErrorResponse(failure: java.lang.Exception): Exception {
+        return when (failure) {
+            is HttpException -> {
+                val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                val jsonAdapter = moshi.adapter(ErrorResponse::class.java)
+                val error = jsonAdapter.fromJson(requireNotNull(failure.response()?.errorBody()?.string()))
+                IllegalStateException(error?.error?.message)
+            }
+            else -> failure
+        }
+    }
 }
