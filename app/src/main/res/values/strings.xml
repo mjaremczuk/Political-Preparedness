@@ -24,6 +24,11 @@
     <string name="find_my_representatives">Find my representatives</string>
     <string name="use_my_location">Use my location</string>
     <string name="my_representatives_header">My Representatives</string>
+    <string name="error_missing_first_line_address">"Enter first line address "</string>
+    <string name="error_missing_city">Enter city</string>
+    <string name="error_missing_state">State field is required</string>
+    <string name="error_missing_zip">Zip field is required</string>
+    <string name="representative_no">%s from %s</string>
 
     <!-- TODO: Add necessary string values -->
 

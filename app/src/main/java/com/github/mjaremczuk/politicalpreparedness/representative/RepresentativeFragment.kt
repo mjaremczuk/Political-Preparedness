@@ -36,6 +36,7 @@ class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>(), Locati
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        //disable motion animation at the start
         binding.representativeContainer.setTransition(R.id.start, R.id.start)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -50,6 +51,17 @@ class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>(), Locati
                 binding.representativeContainer.setTransition(R.id.start, R.id.end)
             }
         }
+        viewModel.message.observe(viewLifecycleOwner) {
+            it?.let {
+                showSnackbar(getString(it))
+            }
+        }
+        viewModel.dataLoading.observe(viewLifecycleOwner) {
+            if (it) {
+                hideKeyboard()
+            }
+        }
+
         binding.state.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 viewModel.setState(requireContext().resources.getStringArray(R.array.states)[position])
@@ -58,13 +70,7 @@ class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>(), Locati
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
-        //TODO: Establish bindings
 
-        //TODO: Define and assign Representative adapter
-
-        //TODO: Populate Representative adapter
-
-        //TODO: Establish button listeners for field and location search
         binding.buttonLocation.setOnClickListener {
             permissionUtil.requestPermissions(this)
         }

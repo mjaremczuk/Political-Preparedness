@@ -90,7 +90,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/representative_title" />
-
+        <Constraint
+            android:id="@+id/representatives_loading"
+            android:layout_width="54dp"
+            app:visibilityMode="ignore"
+            android:layout_height="54dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/representative_recycler"
+            app:layout_constraintEnd_toEndOf="@+id/representative_recycler"
+            app:layout_constraintStart_toStartOf="@+id/representative_recycler"
+            app:layout_constraintTop_toTopOf="@id/representative_recycler" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -197,7 +206,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/representative_title" />
-
     </ConstraintSet>
 
     <Transition
