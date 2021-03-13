@@ -45,48 +45,50 @@ class RepresentativeViewModel(private val repository: ElectionsRepository) : Vie
     }
 
     fun searchForMyRepresentatives() {
-        searchRepresentativesIfFormValid(Address(
-                requireNotNull(line1.value),
-                line2.value,
-                requireNotNull(city.value),
-                requireNotNull(state.value),
-                requireNotNull(zip.value)
-        ))
+        searchRepresentativesIfFormValid(
+                Address(
+                        requireNotNull(line1.value),
+                        line2.value,
+                        requireNotNull(city.value),
+                        requireNotNull(state.value),
+                        requireNotNull(zip.value)
+                )
+        )
     }
 
     private fun searchRepresentativesIfFormValid(address: Address) {
-        viewModelScope.launch {
-            if (address.line1.isBlank()) {
-                message.value = R.string.error_missing_first_line_address
-                return@launch
-            }
-            if (address.city.isBlank()) {
-                message.value = R.string.error_missing_city
-                return@launch
-            }
-            if (address.state.isBlank()) {
-                message.value = R.string.error_missing_state
-                return@launch
-            }
-            if (address.zip.isBlank()) {
-                message.value = R.string.error_missing_zip
-                return@launch
-            }
-            search(address)
+        if (address.line1.isBlank()) {
+            message.value = R.string.error_missing_first_line_address
+            return
         }
+        if (address.city.isBlank()) {
+            message.value = R.string.error_missing_city
+            return
+        }
+        if (address.state.isBlank()) {
+            message.value = R.string.error_missing_state
+            return
+        }
+        if (address.zip.isBlank()) {
+            message.value = R.string.error_missing_zip
+            return
+        }
+        search(address)
     }
 
-    private suspend fun search(address: Address) {
+    private fun search(address: Address) {
         dataLoading.value = true
-        _representatives.value = repository.searchRepresentatives(address)
-        when (val result = _representatives.value) {
-            is Result.Failure -> messageString.value = result.exception.message
-            is Result.Success,
-            is Result.Loading,
-            null -> {
+        viewModelScope.launch {
+            _representatives.value = repository.searchRepresentatives(address)
+            when (val result = _representatives.value) {
+                is Result.Failure -> messageString.value = result.exception.message
+                is Result.Success,
+                is Result.Loading,
+                null -> {
+                }
             }
+            dataLoading.value = false
         }
-        dataLoading.value = false
     }
 
     fun setState(state: String?) {

@@ -2,12 +2,10 @@ package com.github.mjaremczuk.politicalpreparedness.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.github.mjaremczuk.politicalpreparedness.network.models.Address
-import com.github.mjaremczuk.politicalpreparedness.network.models.AdministrationBody
-import com.github.mjaremczuk.politicalpreparedness.network.models.Election
-import com.github.mjaremczuk.politicalpreparedness.network.models.State
+import com.github.mjaremczuk.politicalpreparedness.network.models.*
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.repository.Result
+import com.github.mjaremczuk.politicalpreparedness.representative.model.Representative
 import kotlinx.coroutines.runBlocking
 
 class FakeTestRepository : ElectionsRepository {
@@ -48,6 +46,27 @@ class FakeTestRepository : ElectionsRepository {
             Result.Success(fakeStateData())
         }
     }
+
+    override suspend fun searchRepresentatives(address: Address): Result<List<Representative>> {
+        return if (shouldReturnError) {
+            Result.Failure(Exception("Test exception"))
+        } else {
+            Result.Success(
+                    listOf(
+                            fakeRepresentative("Fake official 1"),
+                            fakeRepresentative("Fake official 2"),
+                            fakeRepresentative("Fake official 3"),
+                            fakeRepresentative("Fake official 4"),
+                    )
+            )
+        }
+    }
+
+    private fun fakeRepresentative(officialName: String) = Representative(
+            Official(officialName, emptyList(), "Fake party 1", listOf("111 332 543", "423125523"), listOf("https://www.google.com"), null, null),
+            Office("Fake office", Division("Fake division-id", "US", "Alabama"), emptyList())
+    )
+
 
     private fun fakeStateData() = State(
             name = "Alabama",

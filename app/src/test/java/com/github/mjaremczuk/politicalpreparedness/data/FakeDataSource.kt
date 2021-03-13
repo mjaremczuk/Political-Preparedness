@@ -49,7 +49,22 @@ class FakeDataSource(val elections: MutableList<Election>? = mutableListOf()) : 
         return if (showDetailsError) {
             Result.Failure(IllegalStateException("Failed to get details!"))
         } else {
-            Result.Failure(IllegalStateException("Failed to get details!"))//
+            Result.Success(
+                    RepresentativeResponse(
+                            listOf(
+                                    Office("Office 1", Division("1", "US", "Alabama"), listOf(1, 2, 3)),
+                                    Office("Office 2", Division("1", "US", "Alabama"), listOf(1, 2, 3)),
+                                    Office("Office 3", Division("1", "US", "Alabama"), listOf(1, 2, 3)),
+                                    Office("Office 4", Division("1", "US", "Alabama"), listOf(1, 2, 3)),
+                            ),
+                            listOf(
+                                    Official("Official 1", emptyList(), "Fake party 1", listOf("111 332 543", "423125523"), listOf("https://www.google.com"), null, null),
+                                    Official("Official 2", emptyList(), "Fake party 2", listOf("111 332 543", "423125523"), listOf("https://www.google.com"), null, null),
+                                    Official("Official 3", emptyList(), "Fake party 3", listOf("111 332 543", "423125523"), listOf("https://www.google.com"), null, null),
+                                    Official("Official 4", emptyList(), "Fake party 4", listOf("111 332 543", "423125523"), listOf("https://www.google.com"), null, null),
+                            )
+                    )
+            )
         }
     }
 

@@ -2,14 +2,16 @@ package com.github.mjaremczuk.politicalpreparedness.repository
 
 import com.github.mjaremczuk.politicalpreparedness.MainCoroutineRule
 import com.github.mjaremczuk.politicalpreparedness.data.FakeDataSource
+import com.github.mjaremczuk.politicalpreparedness.network.models.Address
 import com.github.mjaremczuk.politicalpreparedness.network.models.Division
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
+import com.github.mjaremczuk.politicalpreparedness.representative.model.Representative
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is` as matches
 import org.hamcrest.Matchers.not
+import org.hamcrest.core.IsCollectionContaining
 import org.hamcrest.core.IsEqual
 import org.hamcrest.core.IsInstanceOf
 import org.hamcrest.core.IsNull
@@ -17,6 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
+import org.hamcrest.Matchers.`is` as matches
 
 @ExperimentalCoroutinesApi
 class DefaultElectionsRepositoryTest {
@@ -101,5 +104,26 @@ class DefaultElectionsRepositoryTest {
 
         assertThat(result, IsInstanceOf(Result.Success::class.java))
         assertThat((result as Result.Success).data, not(IsNull()))
+    }
+
+    @Test
+    fun getRepresentatives_Success() = mainCoroutineRule.runBlockingTest {
+        val address: Address = Address("line 1", "line 2", "City", "State", "12345")
+
+        val result = electionsRepository.searchRepresentatives(address)
+
+        assertThat(result, IsInstanceOf(Result.Success::class.java))
+        assertThat((result as Result.Success).data, not(IsNull()))
+        assertThat((result as Result.Success).data, IsCollectionContaining(IsInstanceOf(Representative::class.java)))
+    }
+
+    @Test
+    fun getRepresentatives_Error() = mainCoroutineRule.runBlockingTest {
+        electionsRemoteDataSource.showDetailsError = true
+        val address: Address = Address("line 1", "line 2", "City", "State", "12345")
+
+        val result = electionsRepository.searchRepresentatives(address)
+
+        assertThat(result, IsInstanceOf(Result.Failure::class.java))
     }
 }
