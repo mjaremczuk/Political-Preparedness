@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/representativeFragment"
-        android:name="com.github.mjaremczuk.politicalpreparedness.representative.DetailFragment"
+        android:name="com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeFragment"
         android:label="fragment_representative"
         tools:layout="@layout/fragment_representative" />
     <fragment

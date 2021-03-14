@@ -26,7 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-class DetailFragment : DataBindFragment<FragmentRepresentativeBinding>(), LocationPermissionsUtil.PermissionListener {
+class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>(), LocationPermissionsUtil.PermissionListener {
 
     private val permissionUtil = LocationPermissionsUtil(this)
     lateinit var fusedLocationClient: FusedLocationProviderClient

@@ -30,8 +30,4 @@ interface ElectionDao {
 
     @Query("SELECT * FROM election_table WHERE id = :id AND division_id = :divisionId LIMIT 1")
     suspend fun get(id: Int, divisionId: String): Election?
-
-    //TODO: Add select all election query
-
-    //TODO: Add select single election query
 }
