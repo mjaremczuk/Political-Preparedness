@@ -12,11 +12,12 @@ import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentElectionB
 import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.github.mjaremczuk.politicalpreparedness.utils.LocationPermissionsUtil
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.DateFormat
 
 class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationPermissionsUtil.PermissionListener {
 
-    private val viewModel: ElectionsViewModel by inject()
+    private val viewModel: ElectionsViewModel by viewModel()
     val dateFormatter: DateFormat by inject()
 
     private val permissionUtil = LocationPermissionsUtil(this)

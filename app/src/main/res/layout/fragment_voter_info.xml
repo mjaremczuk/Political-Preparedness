@@ -28,13 +28,15 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/election_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?actionBarSize"
             android:background="@color/colorPrimaryDark"
             android:padding="8dp"
             android:singleLine="true"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@{viewModel.election.name}"
-            app:titleTextColor="@color/white" />
+            app:titleTextAppearance="@style/VoterInfoToolbarTextAppearance"
+            app:titleTextColor="@color/white"
+            tools:title="@tools:sample/lorem[5]" />
 
         <TextView
             android:id="@+id/election_date"

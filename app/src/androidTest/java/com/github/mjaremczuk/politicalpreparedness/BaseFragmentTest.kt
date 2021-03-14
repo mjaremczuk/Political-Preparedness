@@ -6,6 +6,7 @@ import com.github.mjaremczuk.politicalpreparedness.election.ElectionsViewModel
 import com.github.mjaremczuk.politicalpreparedness.election.VoterInfoViewModel
 import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
+import com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -44,6 +45,7 @@ abstract class BaseFragmentTest : AutoCloseKoinTest() {
             viewModel { (election: ElectionModel) ->
                 VoterInfoViewModel(get(), election)
             }
+            viewModel { RepresentativeViewModel(get()) }
             single { FakeTestRepository() as ElectionsRepository }
             single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat }
         }

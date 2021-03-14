@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="fontFamily">@font/arima_madurai</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>
         <item name="android:textViewStyle">@style/DefaultTextStyle</item>
@@ -23,4 +25,13 @@
         <item name="android:fontFamily">@font/arima_madurai_medium</item>
     </style>
 
+    <style name="VoterInfoToolbarTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/arima_madurai_medium</item>
+    </style>
+
+    <style name="ListHeader">
+        <item name="fontFamily">@font/arima_madurai_medium</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>

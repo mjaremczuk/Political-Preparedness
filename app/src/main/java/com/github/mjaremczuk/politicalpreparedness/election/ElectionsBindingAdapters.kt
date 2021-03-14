@@ -10,6 +10,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
+import com.github.mjaremczuk.politicalpreparedness.representative.adapter.RepresentativeListAdapter
+import com.github.mjaremczuk.politicalpreparedness.representative.model.Representative
 
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<ElectionModel>?) {
