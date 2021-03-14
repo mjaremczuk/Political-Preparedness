@@ -16,7 +16,7 @@ import com.github.mjaremczuk.politicalpreparedness.network.models.Channel
 import com.github.mjaremczuk.politicalpreparedness.representative.model.Representative
 
 class RepresentativeListAdapter(
-        private val clickListener: OnClickListener
+        private val clickListener: RepresentativeListener
 ) : ListAdapter<Representative, RepresentativeViewHolder>(RepresentativeDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepresentativeViewHolder {
@@ -25,7 +25,7 @@ class RepresentativeListAdapter(
 
     override fun onBindViewHolder(holder: RepresentativeViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, clickListener)
     }
 
     companion object RepresentativeDiffCallback : DiffUtil.ItemCallback<Representative>() {
@@ -38,7 +38,7 @@ class RepresentativeListAdapter(
         }
     }
 
-    class OnClickListener(val clickListener: (representative: Representative) -> Unit) {
+    class RepresentativeListener(val clickListener: (representative: Representative) -> Unit) {
         fun onClick(representative: Representative) = clickListener(representative)
     }
 }
@@ -55,18 +55,15 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding) : R
                         ))
     }
 
-    fun bind(item: Representative) {
+    fun bind(item: Representative, clickListener: RepresentativeListAdapter.RepresentativeListener) {
         binding.representative = item
+        binding.listener = clickListener
         binding.representativePhoto.setImageResource(R.drawable.ic_profile)
-
-
-        //TODO: Show social links ** Hint: Use provided helper methods
-        //TODO: Show www link ** Hint: Use provided helper methods
+        showSocialLinks(item.official.channels.orEmpty())
+        showWWWLinks(item.official.urls.orEmpty())
 
         binding.executePendingBindings()
     }
-
-    //TODO: Add companion object to inflate ViewHolder (from)
 
     private fun showSocialLinks(channels: List<Channel>) {
         val facebookUrl = getFacebookUrl(channels)
@@ -81,7 +78,9 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding) : R
     }
 
     private fun showWWWLinks(urls: List<String>) {
-        enableLink(binding.wwwIcon, urls.first())
+        if (urls.isEmpty().not()) {
+            enableLink(binding.wwwIcon, urls.first())
+        }
     }
 
     private fun getFacebookUrl(channels: List<Channel>): String? {
@@ -107,7 +106,3 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding) : R
         itemView.context.startActivity(intent)
     }
 }
-
-//TODO: Create RepresentativeDiffCallback
-
-//TODO: Create RepresentativeListener

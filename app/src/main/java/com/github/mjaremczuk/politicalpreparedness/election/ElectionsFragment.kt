@@ -4,33 +4,71 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
+import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentElectionBinding
+import com.github.mjaremczuk.politicalpreparedness.election.adapter.ElectionListAdapter
+import com.github.mjaremczuk.politicalpreparedness.utils.LocationPermissionsUtil
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.DateFormat
 
-class ElectionsFragment : DataBindFragment<FragmentElectionBinding>() {
+class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationPermissionsUtil.PermissionListener {
 
-    //TODO: Declare ViewModel
+    private val viewModel: ElectionsViewModel by viewModel()
+    val dateFormatter: DateFormat by inject()
+
+    private val permissionUtil = LocationPermissionsUtil(this)
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         _binding = FragmentElectionBinding.inflate(layoutInflater, container, false)
-        //TODO: Add ViewModel values and create ViewModel
 
-        //TODO: Add binding values
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
-        //TODO: Link elections to voter info
+        binding.upcomingElectionsRecycler.adapter =
+                ElectionListAdapter(dateFormatter, ElectionListAdapter.ElectionListener {
+                    viewModel.onUpcomingClicked(it)
+                })
 
-        //TODO: Initiate recycler adapters
+        binding.savedElectionsRecycler.adapter =
+                ElectionListAdapter(dateFormatter, ElectionListAdapter.ElectionListener {
+                    viewModel.onSavedClicked(it)
+                })
+        binding.upcomingRefresh.setOnRefreshListener { viewModel.refresh() }
 
-        //TODO: Populate recycler adapters
+        viewModel.navigateTo.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.navigateCompleted()
+                findNavController().navigate(it)
+            }
+        }
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        permissionUtil.requestPermissions(this)
     }
-    //TODO: Refresh adapters when fragment loads
 
+    override fun onDestroyView() {
+        permissionUtil.unregister()
+        super.onDestroyView()
+    }
+
+    override fun onGranted() {
+//  do nothing on this screen
+    }
+
+    override fun onDenied() {
+        showToast(getString(R.string.error_location_permission_denied))
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
 }
