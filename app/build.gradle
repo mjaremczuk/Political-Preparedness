@@ -18,8 +18,8 @@ android {
         applicationId 'com.github.mjaremczuk.politicalpreparedness'
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
         buildConfigField("String", "API_KEY", "\"${properties.getProperty("api_key")}\"")
@@ -27,6 +27,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField("String", "API_KEY", "\"${properties.getProperty("api_key")}\"")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -47,6 +48,19 @@ android {
             returnDefaultValues = true
         }
     }
+    signingConfigs {
+        release {
+            keyAlias = properties["keyAlias"]
+            keyPassword = properties["keyPassword"]
+            storeFile = file(properties["storeFile"])
+            storePassword = properties["storePassword"]
+
+//            storePassword "Ud4city2020!"
+//            keyAlias "political-preparedness"
+//            keyPassword "Ud4city2020!"
+//            storeFile file("../app/political.keystore")
+        }
+    }
     configurations.all {
         resolutionStrategy {
             exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
@@ -57,6 +71,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation platform('com.google.firebase:firebase-bom:28.1.0')
+
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+//    implementation 'com.google.android.gms:play-services-tagmanager:17.0.0'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
@@ -152,3 +171,4 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestUtil 'androidx.test:orchestrator:1.3.0'
 }
+apply plugin: 'com.google.gms.google-services'
