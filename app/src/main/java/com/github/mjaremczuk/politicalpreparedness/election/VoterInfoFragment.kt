@@ -38,7 +38,7 @@ class VoterInfoFragment : DataBindFragment<FragmentVoterInfoBinding>(), Location
 
         binding.dateFormatter = dateFormatter
         binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.stateLocations.movementMethod = LinkMovementMethod.getInstance()
         binding.stateBallot.movementMethod = LinkMovementMethod.getInstance()
 
@@ -69,7 +69,7 @@ class VoterInfoFragment : DataBindFragment<FragmentVoterInfoBinding>(), Location
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        permissionUtil.requestPermissions(this)
+        permissionUtil.registerForResultAndRequestPermissions(this)
     }
 
     override fun onDestroyView() {
@@ -83,7 +83,7 @@ class VoterInfoFragment : DataBindFragment<FragmentVoterInfoBinding>(), Location
                 .addOnSuccessListener { location ->
                     location?.let {
                         try {
-                            val address = Geocoder(requireContext()).getFromLocation(it.latitude, it.longitude, 1).firstOrNull()
+                            val address = Geocoder(requireContext()).getFromLocation(it.latitude, it.longitude, 1)?.firstOrNull()
                             viewModel.loadDetails(address)
                         } catch (ex: Exception) {
                             showSnackbar(getString(R.string.error_failed_get_address_from_location))

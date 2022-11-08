@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
 import com.github.mjaremczuk.politicalpreparedness.R
@@ -28,7 +29,7 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationP
         _binding = FragmentElectionBinding.inflate(layoutInflater, container, false)
 
         binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.upcomingElectionsRecycler.adapter =
                 ElectionListAdapter(dateFormatter, ElectionListAdapter.ElectionListener {
@@ -47,12 +48,15 @@ class ElectionsFragment : DataBindFragment<FragmentElectionBinding>(), LocationP
                 findNavController().navigate(it)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.refresh()
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        permissionUtil.requestPermissions(this)
+        permissionUtil.registerForResultAndRequestPermissions(this)
     }
 
     override fun onDestroyView() {
