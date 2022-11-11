@@ -50,7 +50,7 @@ jobs:
         path: |
           ./local.properties
           ../Political-Preparedness/"${{ secrets.STOREFILE }}"
-        key: secret-files
+        key: ${{ github.sha }}
 
   run-units:
   
@@ -76,7 +76,7 @@ jobs:
         path: |
           ./local.properties
           ../Political-Preparedness/"${{ secrets.STOREFILE }}"
-        key: secret-files
+        key: ${{ github.sha }}
 
     - name: Run Unit Tests
       run: ./gradlew app:testReleaseUnitTest --stacktrace
