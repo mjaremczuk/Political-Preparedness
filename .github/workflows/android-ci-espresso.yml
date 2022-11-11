@@ -32,7 +32,7 @@ jobs:
         storePassword: ${{ secrets.STOREPASSWORD }}
         keyPassword: ${{ secrets.KEYPASSWORD }}
         keyAlias: ${{ secrets.KEYALIAS }}
-        storeFile: ${{ secrets.STOREFILE }}
+        storeFile: ./political.keystore
       run: 
         echo API_KEY="$SECRET_API_KEY" > ./local.properties
         echo storePassword="$storePassword" >> ./local.properties
