@@ -38,7 +38,7 @@ jobs:
         echo storePassword=${{ env.storePassword }} >> ./local.properties
         echo keyPassword=${{ env.keyPassword }} >> ./local.properties
         echo keyAlias=${{ env.keyAlias }} >> ./local.properties
-        echo storeFile=${{ env.storeFile }} >> ./local.properties
+        echo storeFile=../Political-Preparedness/${{ env.storeFile }} >> ./local.properties
 
     - name: Build with Gradle
       run: ./gradlew build
