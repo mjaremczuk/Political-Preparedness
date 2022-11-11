@@ -108,4 +108,5 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 29
+        profile: Galaxy Nexus
         script: ./gradlew connectedCheck
