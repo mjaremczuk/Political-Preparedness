@@ -32,7 +32,7 @@ jobs:
       run: |
         echo "${{ secrets.STOREFILE_B64 }}" > "${{ secrets.STOREFILE }}".asc
 
-        gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch "${{ secrets.STOREFILE }}".asc > "${{ secrets.STOREFILE }}"
+        gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch "${{ secrets.STOREFILE }}".asc > ../Political-Preparedness/political.keystore
         
         echo API_KEY=${{ env.SECRET_API_KEY }} > ./local.properties
         echo storePassword=${{ env.storePassword }} >> ./local.properties
@@ -40,7 +40,7 @@ jobs:
         echo keyAlias=${{ env.keyAlias }} >> ./local.properties
         echo storeFile=${{ env.storeFile }} >> ./local.properties
         
-        ./gradlew app:testReleaseUnitTest
+        ./gradlew assembleRelease
 
 #    - name: Build with Gradle
 #      run: ./gradlew build
