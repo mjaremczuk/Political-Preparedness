@@ -48,8 +48,7 @@ jobs:
       id: restore-build
       with:
         path: |
-          ./local.properties
-          ../Political-Preparedness/"${{ secrets.STOREFILE }}"
+          ./*
         key: ${{ github.sha }}
 
   run-units:
@@ -74,8 +73,7 @@ jobs:
       id: restore-build
       with:
         path: |
-          ./local.properties
-          ../Political-Preparedness/"${{ secrets.STOREFILE }}"
+          ./*
         key: ${{ github.sha }}
 
     - name: Run Unit Tests
