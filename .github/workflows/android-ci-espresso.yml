@@ -28,11 +28,11 @@ jobs:
         gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch "${{ secrets.STOREFILE }}".asc > "${{ secrets.STOREFILE }}"
     - name: Create local.properties with secrets
       env:
-        SECRET_API_KEY: "${{ secrets.SECRET_API_KEY }}"
-        storePassword: "${{ secrets.STOREPASSWORD }}"
-        keyPassword: "${{ secrets.KEYPASSWORD }}"
-        keyAlias: "${{ secrets.KEYALIAS }}"
-        storeFile: "${{ secrets.STOREFILE }}"
+        SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
+        storePassword: ${{ secrets.STOREPASSWORD }}
+        keyPassword: ${{ secrets.KEYPASSWORD }}
+        keyAlias: ${{ secrets.KEYALIAS }}
+        storeFile: ${{ secrets.STOREFILE }}
       run: |
         echo API_KEY=\"$env.SECRET_API_KEY\" > ./local.properties
         echo storePassword=\"$env.storePassword\" >> ./local.properties
