@@ -34,11 +34,11 @@ jobs:
         keyAlias: "${{ secrets.KEYALIAS }}"
         storeFile: "${{ secrets.STOREFILE }}"
       run: |
-        echo API_KEY="$env.SECRET_API_KEY" > ./local.properties
-        echo storePassword="$env.storePassword" >> ./local.properties
-        echo keyPassword="$env.keyPassword" >> ./local.properties
-        echo keyAlias="$env.keyAlias" >> ./local.properties
-        echo storeFile="$env.storeFile" >> ./local.properties
+        echo API_KEY=\"$env.SECRET_API_KEY\" > ./local.properties
+        echo storePassword=\"$env.storePassword\" >> ./local.properties
+        echo keyPassword=\"$env.keyPassword\" >> ./local.properties
+        echo keyAlias=\"$env.keyAlias\" >> ./local.properties
+        echo storeFile=\"$env.storeFile\" >> ./local.properties
         echo $(cat local.properties)
 
     - name: Build with Gradle
