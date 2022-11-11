@@ -1,6 +1,6 @@
 package com.github.mjaremczuk.politicalpreparedness.network.models
 
-import com.squareup.moshi.Json
+import androidx.annotation.Keep
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)

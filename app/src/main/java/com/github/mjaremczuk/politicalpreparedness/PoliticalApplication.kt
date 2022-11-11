@@ -14,6 +14,7 @@ import com.github.mjaremczuk.politicalpreparedness.repository.DefaultElectionsRe
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeViewModel
+import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,7 +29,7 @@ class PoliticalApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        FirebaseApp.initializeApp(this)
         val module = module {
             viewModel { (election: ElectionModel) ->
                 VoterInfoViewModel(get(), election)

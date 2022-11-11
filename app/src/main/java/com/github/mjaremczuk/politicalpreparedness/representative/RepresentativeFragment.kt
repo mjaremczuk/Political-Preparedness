@@ -38,7 +38,7 @@ class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>()
                               savedInstanceState: Bundle?): View? {
         _binding = FragmentRepresentativeBinding.inflate(layoutInflater, container, false)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         //disable motion animation at the start
         binding.representativeContainer.setTransition(R.id.start, R.id.start)
@@ -82,10 +82,15 @@ class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>()
         }
 
         binding.buttonLocation.setOnClickListener {
-            permissionUtil.requestPermissions(this)
+            permissionUtil.requestPermissions()
         }
         binding.executePendingBindings()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        permissionUtil.registerForPermissionResults(this)
     }
 
     @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -113,11 +118,10 @@ class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>()
     }
 
     private fun geoCodeLocation(location: Location): Address {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        return geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                .map { address ->
-                    Address(address.thoroughfare, address.subThoroughfare, address.locality, address.adminArea, address.postalCode)
-                }
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        return geocoder.getFromLocation(location.latitude, location.longitude, 1)!!.map { address ->
+            Address(address.thoroughfare, address.subThoroughfare, address.locality, address.adminArea, address.postalCode)
+        }
                 .first()
     }
 
