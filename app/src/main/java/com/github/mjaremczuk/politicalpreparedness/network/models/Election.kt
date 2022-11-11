@@ -6,8 +6,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.*
 
+@JsonClass(generateAdapter = true)
 @Entity(tableName = "election_table")
 data class Election(
         @PrimaryKey val id: Int,

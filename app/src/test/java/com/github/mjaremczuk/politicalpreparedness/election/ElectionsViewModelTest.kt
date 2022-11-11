@@ -8,6 +8,8 @@ import com.github.mjaremczuk.politicalpreparedness.getOrAwaitValue
 import com.github.mjaremczuk.politicalpreparedness.network.models.Division
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.pauseDispatcher
+import kotlinx.coroutines.test.resumeDispatcher
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.collection.IsEmptyCollection
 import org.hamcrest.core.IsInstanceOf

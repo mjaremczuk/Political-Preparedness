@@ -36,10 +36,6 @@ class ElectionsViewModel(private val repository: ElectionsRepository) : ViewMode
         it.filter { it.saved }
     }
 
-    init {
-        refresh()
-    }
-
     fun refresh() {
         _dataLoading.value = true
         viewModelScope.launch {

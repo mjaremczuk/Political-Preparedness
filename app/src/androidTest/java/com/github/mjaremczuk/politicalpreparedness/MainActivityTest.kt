@@ -24,15 +24,19 @@ import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.network.CivicsApi
 import com.github.mjaremczuk.politicalpreparedness.network.CivicsApiService
 import com.github.mjaremczuk.politicalpreparedness.network.NetworkDataSource
+import com.github.mjaremczuk.politicalpreparedness.network.models.Division
+import com.github.mjaremczuk.politicalpreparedness.network.models.Election
 import com.github.mjaremczuk.politicalpreparedness.repository.DefaultElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeViewModel
 import com.github.mjaremczuk.politicalpreparedness.util.DataBindingIdlingResource
+import com.github.mjaremczuk.politicalpreparedness.util.KoinTestRule
 import com.github.mjaremczuk.politicalpreparedness.util.RecyclerViewItemCountAssertion
 import com.github.mjaremczuk.politicalpreparedness.util.monitorActivity
 import com.github.mjaremczuk.politicalpreparedness.utils.EspressoIdlingResource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -44,50 +48,41 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.test.AutoCloseKoinTest
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class MainActivityTest : AutoCloseKoinTest() {
+class MainActivityTest {
 
     private val dataBindingIdlingResource = DataBindingIdlingResource()
+    private val repository: FakeTestRepository = FakeTestRepository()
 
+    val appContext: Application = getApplicationContext()
+    val module = module {
+        viewModel { (election: ElectionModel) ->
+            VoterInfoViewModel(get(), election)
+        }
+        viewModel { ElectionsViewModel(get()) }
+        viewModel { RepresentativeViewModel(get()) }
+        single { repository as ElectionsRepository }
+        single { ElectionDatabase.getInstance(appContext).electionDao as ElectionDao }
+        single { CivicsApi.create() as CivicsApiService }
+        single(qualifier = named("local")) { LocalDataSource(get(), Dispatchers.IO) as ElectionDataSource }
+        single(qualifier = named("remote")) { NetworkDataSource(get(), Dispatchers.IO) as ElectionDataSource }
+        single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat }
+    }
     @Rule
     @JvmField
     val mRuntimePermissionRule = GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    @Before
-    fun setUp() {
-        stopKoin()
-        val appContext: Application = getApplicationContext()
-        val module = module {
-            viewModel { (election: ElectionModel) ->
-                VoterInfoViewModel(get(), election)
-            }
-            viewModel { ElectionsViewModel(get()) }
-            viewModel { RepresentativeViewModel(get()) }
-            single { ElectionDatabase.getInstance(appContext).electionDao as ElectionDao }
-            single { CivicsApi.create() as CivicsApiService }
-            single(qualifier = named("local")) { LocalDataSource(get(), Dispatchers.IO) as ElectionDataSource }
-            single(qualifier = named("remote")) { NetworkDataSource(get(), Dispatchers.IO) as ElectionDataSource }
-            single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat }
-            single {
-                DefaultElectionsRepository(
-                        get<ElectionDataSource>(qualifier = named("local")),
-                        get<ElectionDataSource>(qualifier = named("remote")),
-                        Dispatchers.IO,
-                ) as ElectionsRepository
-            }
-        }
-        startKoin {
-            modules(listOf(module))
-        }
-    }
+    @get:Rule
+    val koinTestRule = KoinTestRule(
+            modules = listOf(module)
+    )
 
     @Before
     fun registerIdlingResource() {
@@ -102,7 +97,12 @@ class MainActivityTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun upcomingElections_AddAndRemoveFromSaved() {
+    fun upcomingElections_AddAndRemoveFromSaved() = runBlockingTest {
+        val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
+        val election2 = Election(2, "Title2", Date(), Division("2", "us", "ga"))
+        val election3 = Election(3, "Title3", Date(), Division("3", "us", "cl"))
+        repository.addElections(election1, election2, election3)
+
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
@@ -122,6 +122,11 @@ class MainActivityTest : AutoCloseKoinTest() {
 
     @Test
     fun myRepresentative_SearchForMyRepresentativesUsingLocationAddress() {
+        val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
+        val election2 = Election(2, "Title2", Date(), Division("2", "us", "ga"))
+        val election3 = Election(3, "Title3", Date(), Division("3", "us", "cl"))
+        repository.addElections(election1, election2, election3)
+
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
