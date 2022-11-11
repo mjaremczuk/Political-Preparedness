@@ -40,16 +40,17 @@ jobs:
         echo keyAlias=${{ env.keyAlias }} >> ./local.properties
         echo storeFile=../${{ env.storeFile }} >> ./local.properties
 
-    - name: Build with Gradle
-      run: ./gradlew build
+#    - name: Build with Gradle
+#      run: ./gradlew build
 
-#  run-units:
+  run-units:
   
-#    runs-on: ubuntu-latest
+    needs: build
+    runs-on: ubuntu-latest
     
-#    steps:
-#    - name: Run Unit Tests
-#      run: ./gradlew app:testReleaseUnitTest --stacktrace
+    steps:
+    - name: Run Unit Tests
+      run: ./gradlew app:testReleaseUnitTest --stacktrace
       
 #  run-espresso:
   
