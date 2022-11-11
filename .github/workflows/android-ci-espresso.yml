@@ -24,7 +24,7 @@ jobs:
       run: chmod +x gradlew
     - name: Create .keystore file
       run: |
-        echo "${{ secrets.STOREFILE_B64 }}" > ./political.keystore.asc
+        echo "${{ secrets.STOREFILE_B64 }}" > "${{ secrets.STOREFILE }}".asc
         echo $(cat ./political.keystore.asc)
         gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch "${{ secrets.STOREFILE }}".asc > "${{ secrets.STOREFILE }}"
     - name: Create local.properties with secrets
