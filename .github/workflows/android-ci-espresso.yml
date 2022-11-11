@@ -25,21 +25,24 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-  run-units:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Run Unit Tests
-      run: ./gradlew app:testReleaseUnitTest --stacktrace
-      
-  run-espresso:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Run espresso
-    - uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: 27
-        target: default
-        arch: x86
-        profile: Pixel 3
-        script: ./gradlew connectedCheck --stacktrace
+#  run-units:
+  
+#    runs-on: ubuntu-latest
     
+#    steps:
+#    - name: Run Unit Tests
+#      run: ./gradlew app:testReleaseUnitTest --stacktrace
+      
+#  run-espresso:
+  
+#    runs-on: ubuntu-latest
+    
+#    steps:
+#    - name: Run espresso
+#    - uses: reactivecircus/android-emulator-runner@v2
+#      with:
+#        api-level: 27
+#        target: default
+#        arch: x86
+#        profile: Pixel 3
+#        script: ./gradlew connectedCheck --stacktrace
