@@ -45,6 +45,7 @@ jobs:
 
     - name: Cache Gradle packages
       uses: actions/cache@v3
+      id: restore-build
       with:
         path: |
           ./local.properties
@@ -53,7 +54,7 @@ jobs:
 
   run-units:
   
-    needs: build
+    needs: [build]
     runs-on: ubuntu-latest
     
     steps:
@@ -70,6 +71,7 @@ jobs:
       
     - name: Cache Gradle packages
       uses: actions/cache@v3
+      id: restore-build
       with:
         path: |
           ./local.properties
