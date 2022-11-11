@@ -31,10 +31,10 @@ jobs:
         storeFile: ${{ secrets.STOREFILE }}
       run: 
         echo API_KEY="$SECRET_API_KEY" > ./local.properties
-        echo storePassword="$storePassword" > ./local.properties
-        echo keyPassword="$keyPassword" > ./local.properties
-        echo keyAlias="$keyAlias" > ./local.properties
-        echo storeFile="$storeFile" > ./local.properties
+        echo storePassword="$storePassword" >> ./local.properties
+        echo keyPassword="$keyPassword" >> ./local.properties
+        echo keyAlias="$keyAlias" >> ./local.properties
+        echo storeFile="$storeFile" >> ./local.properties
 
     - name: Build with Gradle
       run: ./gradlew build
