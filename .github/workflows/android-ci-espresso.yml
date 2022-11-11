@@ -22,7 +22,7 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle old Create .keystore file
+    - name: Prepare secrets
       env:
         SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
         storePassword: ${{ secrets.STOREPASSWORD }}
@@ -30,20 +30,18 @@ jobs:
         keyAlias: ${{ secrets.KEYALIAS }}
         storeFile: ${{ secrets.STOREFILE }}
       run: |
-        echo "${{ secrets.STOREFILE_B64 }}" > "${{ secrets.STOREFILE }}".asc
+        echo "${{ secrets.STOREFILE_B64 }}" > ../"${{ secrets.STOREFILE }}".asc
 
-        gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch "${{ secrets.STOREFILE }}".asc > ../Political-Preparedness/political.keystore
+        gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch ../"${{ secrets.STOREFILE }}".asc > ../Political-Preparedness/"${{ secrets.STOREFILE }}"
         
         echo API_KEY=${{ env.SECRET_API_KEY }} > ./local.properties
         echo storePassword=${{ env.storePassword }} >> ./local.properties
         echo keyPassword=${{ env.keyPassword }} >> ./local.properties
         echo keyAlias=${{ env.keyAlias }} >> ./local.properties
         echo storeFile=${{ env.storeFile }} >> ./local.properties
-        
-        ./gradlew build
 
-#    - name: Build with Gradle
-#      run: ./gradlew build
+    - name: Build with Gradle
+      run: ./gradlew build
 
 #  run-units:
   
