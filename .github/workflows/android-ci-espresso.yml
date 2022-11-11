@@ -22,6 +22,10 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Create .keystore file
+      run: |
+        echo "${{ secrets.STOREFILE_B64 }}" > political.keystore.asc
+        gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch political.keystore.asc > political.keystore
     - name: Create local.properties with secrets
       env:
         SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
