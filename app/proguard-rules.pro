@@ -37,6 +37,8 @@
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
 
+-dontwarn com.squareup.okhttp.**
+
 #Moshi
 # JSR 305 annotations are for embedding nullability information.
 -keepclasseswithmembers class * {

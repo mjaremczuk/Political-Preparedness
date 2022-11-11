@@ -35,6 +35,7 @@ import com.github.mjaremczuk.politicalpreparedness.util.KoinTestRule
 import com.github.mjaremczuk.politicalpreparedness.util.RecyclerViewItemCountAssertion
 import com.github.mjaremczuk.politicalpreparedness.util.monitorActivity
 import com.github.mjaremczuk.politicalpreparedness.utils.EspressoIdlingResource
+import com.github.mjaremczuk.politicalpreparedness.utils.GeocoderHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Matchers.not
@@ -66,6 +67,7 @@ class MainActivityTest {
         }
         viewModel { ElectionsViewModel(get()) }
         viewModel { RepresentativeViewModel(get()) }
+        factory { GeocoderHelper.Factory(Dispatchers.IO) }
         single { repository as ElectionsRepository }
         single { ElectionDatabase.getInstance(appContext).electionDao as ElectionDao }
         single { CivicsApi.create() as CivicsApiService }

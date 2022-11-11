@@ -35,7 +35,11 @@ class RepresentativeViewModel(private val repository: ElectionsRepository) : Vie
         }
     }
 
-    fun searchForRepresentatives(address: Address) {
+    fun searchForRepresentatives(address: Address?) {
+        if(address == null) {
+            message.value = R.string.representative_failed_parse_location
+            return
+        }
         _line1.value = address.line1
         _line2.value = address.line2.orEmpty()
         _city.value = address.city
