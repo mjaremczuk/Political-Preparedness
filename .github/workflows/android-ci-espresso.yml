@@ -22,10 +22,19 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Update Username from Secrets
+    - name: Create local.properties with secrets
       env:
         SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
-      run: echo API_KEY="$SECRET_API_KEY" > ./local.properties
+        storePassword: ${{ secrets.STOREPASSWORD }}
+        keyPassword: ${{ secrets.KEYPASSWORD }}
+        keyAlias: ${{ secrets.KEYALIAS }}
+        storeFile: ${{ secrets.STOREFILE }}
+      run: 
+        echo API_KEY="$SECRET_API_KEY" > ./local.properties
+        echo storePassword="$storePassword" > ./local.properties
+        echo keyPassword="$keyPassword" > ./local.properties
+        echo keyAlias="$keyAlias" > ./local.properties
+        echo storeFile="$storeFile" > ./local.properties
 
     - name: Build with Gradle
       run: ./gradlew build
