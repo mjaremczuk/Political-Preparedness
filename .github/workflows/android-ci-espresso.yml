@@ -104,11 +104,11 @@ jobs:
           ./*
         key: ${{ github.sha }}
         
-    - name: Run espresso
-    - uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: 27
-        target: default
-        arch: x86
-        profile: Nexus 6
-        script: ./gradlew connectedCheck --stacktrace
+#    - name: Run espresso
+#    - uses: reactivecircus/android-emulator-runner@v2
+#      with:
+#        api-level: 27
+#        target: default
+#        arch: x86
+#        profile: Nexus 6
+#        script: ./gradlew connectedCheck --stacktrace
