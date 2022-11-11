@@ -22,6 +22,11 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Update Username from Secrets
+      env:
+        SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
+        run: echo API_KEY="$SECRET_API_KEY" > ./local.properties
+
     - name: Build with Gradle
       run: ./gradlew build
 
