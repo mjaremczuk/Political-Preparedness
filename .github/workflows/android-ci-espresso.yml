@@ -34,7 +34,7 @@ jobs:
         keyAlias: ${{ secrets.KEYALIAS }}
         storeFile: ${{ secrets.STOREFILE }}
       run: |
-        echo API_KEY=${{ envSECRET_API_KEY }} > ./local.properties
+        echo API_KEY=${{ env.SECRET_API_KEY }} > ./local.properties
         echo storePassword=\"$env.storePassword\" >> ./local.properties
         echo keyPassword=\"$env.keyPassword\" >> ./local.properties
         echo keyAlias=\"$env.keyAlias\" >> ./local.properties
