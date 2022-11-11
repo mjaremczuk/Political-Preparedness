@@ -25,6 +25,7 @@ jobs:
     - name: Create .keystore file
       run: |
         echo "${{ secrets.STOREFILE_B64 }}" > ./political.keystore.asc
+        echo $(cat ./political.keystore.asc)
         gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch "${{ secrets.STOREFILE }}".asc > "${{ secrets.STOREFILE }}"
     - name: Create local.properties with secrets
       env:
@@ -35,10 +36,10 @@ jobs:
         storeFile: ${{ secrets.STOREFILE }}
       run: |
         echo API_KEY=${{ env.SECRET_API_KEY }} > ./local.properties
-        echo storePassword=\"$env.storePassword\" >> ./local.properties
-        echo keyPassword=\"$env.keyPassword\" >> ./local.properties
-        echo keyAlias=\"$env.keyAlias\" >> ./local.properties
-        echo storeFile=\"$env.storeFile\" >> ./local.properties
+        echo storePassword=${{ env.storePassword }} >> ./local.properties
+        echo keyPassword=${{ env.keyPassword }} >> ./local.properties
+        echo keyAlias=${{ env.keyAlias }} >> ./local.properties
+        echo storeFile=${{ env.storeFile }} >> ./local.properties
         echo $(cat local.properties)
 
     - name: Build with Gradle
