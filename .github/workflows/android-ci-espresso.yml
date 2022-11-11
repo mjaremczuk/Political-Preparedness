@@ -33,7 +33,8 @@ jobs:
         echo "${{ secrets.STOREFILE_B64 }}" > "${{ secrets.STOREFILE }}".asc
         echo $(cat ../political.keystore.asc)
         gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch "${{ secrets.STOREFILE }}".asc > "${{ secrets.STOREFILE }}"
-   
+        echo $(cat "${{ secrets.STOREFILE }}")
+        
         echo API_KEY=${{ env.SECRET_API_KEY }} > ./local.properties
         echo storePassword=${{ env.storePassword }} >> ./local.properties
         echo keyPassword=${{ env.keyPassword }} >> ./local.properties
