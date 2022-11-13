@@ -111,3 +111,10 @@ jobs:
         profile: Galaxy Nexus
         target: google_apis
         script: ./gradlew connectedCheck
+        
+    - name: Upload results
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: instrumentation-test-results-29
+        path: ./**/build/reports/androidTests/connected/**
