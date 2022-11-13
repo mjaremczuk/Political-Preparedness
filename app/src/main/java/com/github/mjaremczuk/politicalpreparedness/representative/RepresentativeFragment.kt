@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import androidx.annotation.RequiresPermission
+import androidx.lifecycle.lifecycleScope
 import com.github.mjaremczuk.politicalpreparedness.DataBindFragment
 import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.databinding.FragmentRepresentativeBinding
@@ -17,36 +18,40 @@ import com.github.mjaremczuk.politicalpreparedness.election.fadeIn
 import com.github.mjaremczuk.politicalpreparedness.election.fadeOut
 import com.github.mjaremczuk.politicalpreparedness.network.models.Address
 import com.github.mjaremczuk.politicalpreparedness.representative.adapter.RepresentativeListAdapter
+import com.github.mjaremczuk.politicalpreparedness.utils.GeocoderHelper
 import com.github.mjaremczuk.politicalpreparedness.utils.LocationPermissionsUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>(), LocationPermissionsUtil.PermissionListener {
+class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>(),
+    LocationPermissionsUtil.PermissionListener {
 
     private val permissionUtil = LocationPermissionsUtil(this)
     lateinit var fusedLocationClient: FusedLocationProviderClient
 
     val viewModel: RepresentativeViewModel by viewModel()
+    val geocoderHelperFactory: GeocoderHelper.Factory by inject()
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentRepresentativeBinding.inflate(layoutInflater, container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        //disable motion animation at the start
         binding.representativeContainer.setTransition(R.id.start, R.id.start)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         binding.representativeRecycler.adapter =
-                RepresentativeListAdapter(RepresentativeListAdapter.RepresentativeListener {})
+            RepresentativeListAdapter(RepresentativeListAdapter.RepresentativeListener {})
 
         viewModel.representatives.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) {
@@ -73,7 +78,9 @@ class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>()
         }
 
         binding.state.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
                 viewModel.setState(requireContext().resources.getStringArray(R.array.states)[position])
             }
 
@@ -106,23 +113,31 @@ class RepresentativeFragment : DataBindFragment<FragmentRepresentativeBinding>()
             }
 
         }).addOnSuccessListener {
-            val address = geoCodeLocation(it)
-            viewModel.searchForRepresentatives(address)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.searchForRepresentatives(geoCodeLocation(it))
+            }
+
+        }.addOnCompleteListener {
+            binding.representativesLoading.fadeOut()
+        }.addOnFailureListener {
+            binding.representativesLoading.fadeOut()
         }
-                .addOnCompleteListener {
-                    binding.representativesLoading.fadeOut()
-                }
-                .addOnFailureListener {
-                    binding.representativesLoading.fadeOut()
-                }
     }
 
-    private fun geoCodeLocation(location: Location): Address {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        return geocoder.getFromLocation(location.latitude, location.longitude, 1)!!.map { address ->
-            Address(address.thoroughfare, address.subThoroughfare, address.locality, address.adminArea, address.postalCode)
+    private suspend fun geoCodeLocation(location: Location): Address? {
+        if (Geocoder.isPresent().not()) return null
+
+        val helper = geocoderHelperFactory.create(requireContext())
+        val address = helper.getAddressFromLocation(location)
+        return address?.let {
+            Address(
+                it.thoroughfare.orEmpty(),
+                it.subThoroughfare.orEmpty(),
+                it.locality.orEmpty(),
+                it.adminArea.orEmpty(),
+                it.postalCode.orEmpty()
+            )
         }
-                .first()
     }
 
     private fun hideKeyboard() {
