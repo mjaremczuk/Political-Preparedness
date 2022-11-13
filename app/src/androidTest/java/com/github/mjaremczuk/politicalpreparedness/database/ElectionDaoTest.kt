@@ -10,6 +10,7 @@ import com.github.mjaremczuk.politicalpreparedness.network.models.Election
 import com.github.mjaremczuk.politicalpreparedness.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsNull
 import org.junit.After
@@ -43,7 +44,7 @@ class ElectionDaoTest {
     fun tearDown() = database.close()
 
     @Test
-    fun addElection() = runBlockingTest {
+    fun addElection() = runTest {
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
 
         database.electionDao.save(election1)
@@ -60,7 +61,7 @@ class ElectionDaoTest {
     }
 
     @Test
-    fun getAllSaved() = runBlockingTest {
+    fun getAllSaved() = runTest {
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
         val election2 = Election(2, "Title1", Date(), Division("1", "us", "al"))
         val election3 = Election(3, "Title1", Date(), Division("1", "us", "al"))
@@ -73,7 +74,7 @@ class ElectionDaoTest {
     }
 
     @Test
-    fun markElectionAsSaved() = runBlockingTest {
+    fun markElectionAsSaved() = runTest {
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
 
         database.electionDao.save(election1)
@@ -91,7 +92,7 @@ class ElectionDaoTest {
     }
 
     @Test
-    fun markElectionAsNotSaved() = runBlockingTest {
+    fun markElectionAsNotSaved() = runTest {
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"), saved = true)
 
         database.electionDao.save(election1)
@@ -109,7 +110,7 @@ class ElectionDaoTest {
     }
 
     @Test
-    fun deleteAllElections() = runBlockingTest {
+    fun deleteAllElections() = runTest {
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
         val election2 = Election(2, "Title1", Date(), Division("1", "us", "al"))
         val election3 = Election(3, "Title1", Date(), Division("1", "us", "al"))

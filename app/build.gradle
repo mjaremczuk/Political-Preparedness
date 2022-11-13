@@ -53,6 +53,13 @@ android {
     }
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+
+        emulatorSnapshots {
+            enableForTestFailures true
+            maxSnapshotsForTestFailures 2
+            compressSnapshots false
+        }
+
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true

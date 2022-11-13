@@ -14,8 +14,7 @@ import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.network.models.Division
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.CoreMatchers.not
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
@@ -27,7 +26,7 @@ import java.util.*
 class VoterInfoFragmentTest : BaseFragmentTest() {
 
     @Test
-    fun loadDetails_ShowVoterDetailsForUpcomingElection() = runBlockingTest {
+    fun loadDetails_ShowVoterDetailsForUpcomingElection() = runTest {
         val election = ElectionModel(1, "Title1", Date(), Division("1", "us", "al"), false)
         val extras = bundleOf("election" to election)
         launchFragmentInContainer<VoterInfoFragment>(extras, R.style.AppTheme)
@@ -45,7 +44,7 @@ class VoterInfoFragmentTest : BaseFragmentTest() {
     }
 
     @Test
-    fun loadDetails_FailedShowVoterDetailsUpcomingElection() = runBlockingTest {
+    fun loadDetails_FailedShowVoterDetailsUpcomingElection() = runTest {
         val election = ElectionModel(1, "Title3", Date(), Division("1", "us", "al"), false)
         val extras = bundleOf("election" to election)
         repository.setReturnError(true)
@@ -54,16 +53,26 @@ class VoterInfoFragmentTest : BaseFragmentTest() {
         onView(withId(R.id.state_header)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
         onView(withId(R.id.state_ballot)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
         onView(withId(R.id.state_locations)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
-        onView(withId(R.id.state_correspondence_header)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+        onView(withId(R.id.state_correspondence_header)).check(
+            matches(
+                withEffectiveVisibility(
+                    Visibility.INVISIBLE
+                )
+            )
+        )
         onView(withId(R.id.address)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
         onView(withId(R.id.state_header)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
         onView(withId(R.id.election_name)).check(matches(isDisplayed()))
         onView(withId(R.id.election_name)).check(matches(hasDescendant(withText("Title3"))))
-        onView(withText("Failed to load details using your location information")).check(matches(isDisplayed()))
+        onView(withText("Failed to load details using your location information")).check(
+            matches(
+                isDisplayed()
+            )
+        )
     }
 
     @Test
-    fun loadDetails_ShowVoterDetailsUpcomingAndSavedElection() = runBlockingTest {
+    fun loadDetails_ShowVoterDetailsUpcomingAndSavedElection() = runTest {
         val election = ElectionModel(1, "Title3", Date(), Division("1", "us", "al"), true)
         val extras = bundleOf("election" to election)
         launchFragmentInContainer<VoterInfoFragment>(extras, R.style.AppTheme)
@@ -80,7 +89,7 @@ class VoterInfoFragmentTest : BaseFragmentTest() {
     }
 
     @Test
-    fun followElection_NavigateBackOnClick() = runBlockingTest {
+    fun followElection_NavigateBackOnClick() = runTest {
         val election = ElectionModel(1, "Title3", Date(), Division("1", "us", "al"), false)
         val extras = bundleOf("election" to election)
         val scenario = launchFragmentInContainer<VoterInfoFragment>(extras, R.style.AppTheme)
@@ -95,7 +104,7 @@ class VoterInfoFragmentTest : BaseFragmentTest() {
     }
 
     @Test
-    fun unfollowElection_NavigateBackOnClick() = runBlockingTest {
+    fun unfollowElection_NavigateBackOnClick() = runTest {
         val election = ElectionModel(1, "Title3", Date(), Division("1", "us", "al"), true)
         val extras = bundleOf("election" to election)
         val scenario = launchFragmentInContainer<VoterInfoFragment>(extras, R.style.AppTheme)

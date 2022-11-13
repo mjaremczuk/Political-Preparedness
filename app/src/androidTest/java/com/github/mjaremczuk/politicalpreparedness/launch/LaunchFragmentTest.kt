@@ -11,6 +11,7 @@ import androidx.test.filters.MediumTest
 import com.github.mjaremczuk.politicalpreparedness.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
@@ -24,7 +25,7 @@ class LaunchFragmentTest {
     private val navController = Mockito.mock(NavController::class.java)
 
     @Test
-    fun navigateToUpcomingElections() = runBlockingTest {
+    fun navigateToUpcomingElections() = runTest {
         val scenario = launchFragmentInContainer<LaunchFragment>(null, R.style.AppTheme)
 
         scenario.onFragment {
@@ -36,7 +37,7 @@ class LaunchFragmentTest {
     }
 
     @Test
-    fun navigateToRepresentatives() = runBlockingTest {
+    fun navigateToRepresentatives() = runTest {
         val scenario = launchFragmentInContainer<LaunchFragment>(null, R.style.AppTheme)
 
         scenario.onFragment {

@@ -7,8 +7,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -26,7 +25,6 @@ import com.github.mjaremczuk.politicalpreparedness.network.CivicsApiService
 import com.github.mjaremczuk.politicalpreparedness.network.NetworkDataSource
 import com.github.mjaremczuk.politicalpreparedness.network.models.Division
 import com.github.mjaremczuk.politicalpreparedness.network.models.Election
-import com.github.mjaremczuk.politicalpreparedness.repository.DefaultElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeViewModel
@@ -37,7 +35,7 @@ import com.github.mjaremczuk.politicalpreparedness.util.monitorActivity
 import com.github.mjaremczuk.politicalpreparedness.utils.EspressoIdlingResource
 import com.github.mjaremczuk.politicalpreparedness.utils.GeocoderHelper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -45,8 +43,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.text.DateFormat
@@ -71,19 +67,30 @@ class MainActivityTest {
         single { repository as ElectionsRepository }
         single { ElectionDatabase.getInstance(appContext).electionDao as ElectionDao }
         single { CivicsApi.create() as CivicsApiService }
-        single(qualifier = named("local")) { LocalDataSource(get(), Dispatchers.IO) as ElectionDataSource }
-        single(qualifier = named("remote")) { NetworkDataSource(get(), Dispatchers.IO) as ElectionDataSource }
+        single(qualifier = named("local")) {
+            LocalDataSource(
+                get(),
+                Dispatchers.IO
+            ) as ElectionDataSource
+        }
+        single(qualifier = named("remote")) {
+            NetworkDataSource(
+                get(),
+                Dispatchers.IO
+            ) as ElectionDataSource
+        }
         single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat }
     }
+
     @Rule
     @JvmField
     val mRuntimePermissionRule = GrantPermissionRule.grant(
-            android.Manifest.permission.ACCESS_FINE_LOCATION
+        android.Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     @get:Rule
     val koinTestRule = KoinTestRule(
-            modules = listOf(module)
+        modules = listOf(module)
     )
 
     @Before
@@ -99,7 +106,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun upcomingElections_AddAndRemoveFromSaved() = runBlockingTest {
+    fun upcomingElections_AddAndRemoveFromSaved() = runTest {
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
         val election2 = Election(2, "Title2", Date(), Division("2", "us", "ga"))
         val election3 = Election(3, "Title3", Date(), Division("3", "us", "cl"))
@@ -113,7 +120,12 @@ class MainActivityTest {
         addElectionToSaved()
 
         onView(withId(R.id.saved_elections_recycler))
-                .perform(RecyclerViewActions.actionOnItemAtPosition<ElectionListAdapter.ElectionViewHolder>(0, click()))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<ElectionListAdapter.ElectionViewHolder>(
+                    0,
+                    click()
+                )
+            )
         onView(withId(R.id.voter_action_button)).check(matches(withText("Unfollow election")))
         onView(withId(R.id.voter_action_button)).perform(click())
 
@@ -123,7 +135,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun myRepresentative_SearchForMyRepresentativesUsingLocationAddress() {
+    fun myRepresentative_SearchForMyRepresentativesUsingLocationAddress() = runTest {
         val election1 = Election(1, "Title1", Date(), Division("1", "us", "al"))
         val election2 = Election(2, "Title2", Date(), Division("2", "us", "ga"))
         val election3 = Election(3, "Title3", Date(), Division("3", "us", "cl"))
@@ -140,15 +152,15 @@ class MainActivityTest {
         onView(withId(R.id.representative_button)).perform(click())
         onView(withId(R.id.button_location)).perform(click())
         onView(withId(R.id.representative_recycler))
-                .check(RecyclerViewItemCountAssertion.withItemCount(not(0)))
+            .check(RecyclerViewItemCountAssertion.withItemCount(not(0)))
 
         Espresso.pressBack()
 
         onView(withId(R.id.upcoming_button)).perform(click())
-        onView(withId(R.id.saved_elections_header)).check(ViewAssertions.matches(withText("Saved elections")))
+        onView(withId(R.id.saved_elections_header)).check(matches(withText("Saved elections")))
         onView(withId(R.id.saved_elections_recycler)).check(matches(isDisplayed()))
         onView(withId(R.id.saved_elections_recycler))
-                .check(RecyclerViewItemCountAssertion.withItemCount(1))
+            .check(RecyclerViewItemCountAssertion.withItemCount(1))
 
         activityScenario.close()
     }
@@ -158,14 +170,19 @@ class MainActivityTest {
         onView(withId(R.id.upcoming_elections_header)).check(matches(withText("Upcoming elections")))
         onView(withId(R.id.saved_elections_header)).check(matches(not(isDisplayed())))
         onView(withId(R.id.upcoming_elections_recycler))
-                .perform(RecyclerViewActions.actionOnItemAtPosition<ElectionListAdapter.ElectionViewHolder>(0, click()))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<ElectionListAdapter.ElectionViewHolder>(
+                    0,
+                    click()
+                )
+            )
 
         onView(withId(R.id.voter_action_button)).check(matches(withText("Follow election")))
         onView(withId(R.id.voter_action_button)).perform(click())
 
-        onView(withId(R.id.saved_elections_header)).check(ViewAssertions.matches(withText("Saved elections")))
+        onView(withId(R.id.saved_elections_header)).check(matches(withText("Saved elections")))
         onView(withId(R.id.saved_elections_recycler)).check(matches(isDisplayed()))
         onView(withId(R.id.saved_elections_recycler))
-                .check(RecyclerViewItemCountAssertion.withItemCount(1))
+            .check(RecyclerViewItemCountAssertion.withItemCount(1))
     }
 }
