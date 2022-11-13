@@ -109,4 +109,5 @@ jobs:
       with:
         api-level: 29
         profile: Galaxy Nexus
+        target: google_apis
         script: ./gradlew connectedCheck
