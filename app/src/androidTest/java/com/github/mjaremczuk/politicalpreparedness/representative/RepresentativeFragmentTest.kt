@@ -12,7 +12,7 @@ import com.github.mjaremczuk.politicalpreparedness.BaseFragmentTest
 import com.github.mjaremczuk.politicalpreparedness.R
 import com.github.mjaremczuk.politicalpreparedness.util.RecyclerViewItemCountAssertion
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers.not
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 class RepresentativeFragmentTest : BaseFragmentTest() {
 
     @Test
-    fun searchRepresentative_ErrorMissingLine1() = runBlockingTest {
+    fun searchRepresentative_ErrorMissingLine1() = runTest {
         launchFragmentInContainer<RepresentativeFragment>(null, R.style.AppTheme)
 
         onView(withId(R.id.button_search)).perform(click())
@@ -31,7 +31,7 @@ class RepresentativeFragmentTest : BaseFragmentTest() {
     }
 
     @Test
-    fun searchRepresentative_ErrorMissingCity() = runBlockingTest {
+    fun searchRepresentative_ErrorMissingCity() = runTest {
         launchFragmentInContainer<RepresentativeFragment>(null, R.style.AppTheme)
 
         onView(withId(R.id.address_line_1)).perform(typeText("Address line 1"))
@@ -41,7 +41,7 @@ class RepresentativeFragmentTest : BaseFragmentTest() {
     }
 
     @Test
-    fun searchRepresentative_ErrorMissingZip() = runBlockingTest {
+    fun searchRepresentative_ErrorMissingZip() = runTest {
         launchFragmentInContainer<RepresentativeFragment>(null, R.style.AppTheme)
 
         onView(withId(R.id.address_line_1)).perform(typeText("Address line 1"))
@@ -52,7 +52,7 @@ class RepresentativeFragmentTest : BaseFragmentTest() {
     }
 
     @Test
-    fun searchRepresentative_ManuallyEnteredData() = runBlockingTest {
+    fun searchRepresentative_ManuallyEnteredData() = runTest {
         launchFragmentInContainer<RepresentativeFragment>(null, R.style.AppTheme)
 
         onView(withId(R.id.address_line_1)).perform(typeText("Address line 1"))
@@ -65,18 +65,19 @@ class RepresentativeFragmentTest : BaseFragmentTest() {
     }
 
     @Test
-    fun searchRepresentative_LocationAddress() = runBlockingTest {
+    fun searchRepresentative_LocationAddress() = runTest {
         launchFragmentInContainer<RepresentativeFragment>(null, R.style.AppTheme)
 
         onView(withId(R.id.button_location)).perform(click())
         onView(withId(R.id.representative_recycler))
                 .check(RecyclerViewItemCountAssertion.withItemCount(4))
         onView(withId(R.id.representative_recycler)).perform(swipeUp())
+        onView(withId(R.id.representative_recycler)).perform(swipeUp())
         onView(withId(R.id.button_location)).check(matches(not(isDisplayed())))
     }
 
     @Test
-    fun searchRepresentative_FetchingError() = runBlockingTest {
+    fun searchRepresentative_FetchingError() = runTest {
         repository.setReturnError(true)
         launchFragmentInContainer<RepresentativeFragment>(null, R.style.AppTheme)
 

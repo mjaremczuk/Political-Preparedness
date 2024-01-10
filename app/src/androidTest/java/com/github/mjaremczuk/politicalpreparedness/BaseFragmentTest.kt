@@ -8,6 +8,8 @@ import com.github.mjaremczuk.politicalpreparedness.election.model.ElectionModel
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeViewModel
 import com.github.mjaremczuk.politicalpreparedness.util.KoinTestRule
+import com.github.mjaremczuk.politicalpreparedness.utils.GeocoderHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -34,6 +36,7 @@ abstract class BaseFragmentTest {
             VoterInfoViewModel(get(), election)
         }
         viewModel { RepresentativeViewModel(get()) }
+        factory { GeocoderHelper.Factory(Dispatchers.IO) }
         single { repository as ElectionsRepository }
         single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat }
     }

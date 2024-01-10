@@ -1,0 +1,122 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Prepare secrets
+      env:
+        SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
+        storePassword: ${{ secrets.STOREPASSWORD }}
+        keyPassword: ${{ secrets.KEYPASSWORD }}
+        keyAlias: ${{ secrets.KEYALIAS }}
+        storeFile: ${{ secrets.STOREFILE }}
+      run: |
+        echo "${{ secrets.STOREFILE_B64 }}" > ../"${{ secrets.STOREFILE }}".asc
+
+        gpg -d --passphrase "${{ secrets.STOREFILE_PASSWORD }}"  --batch ../"${{ secrets.STOREFILE }}".asc > ../Political-Preparedness/"${{ secrets.STOREFILE }}"
+        
+        echo API_KEY=${{ env.SECRET_API_KEY }} > ./local.properties
+        echo storePassword=${{ env.storePassword }} >> ./local.properties
+        echo keyPassword=${{ env.keyPassword }} >> ./local.properties
+        echo keyAlias=${{ env.keyAlias }} >> ./local.properties
+        echo storeFile=../${{ env.storeFile }} >> ./local.properties
+
+#    - name: Build with Gradle
+#      run: ./gradlew build
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      id: restore-build
+      with:
+        path: |
+          ./*
+        key: ${{ github.sha }}
+
+  run-units:
+  
+    needs: [build]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      id: restore-build
+      with:
+        path: |
+          ./*
+        key: ${{ github.sha }}
+
+    - name: Run Unit Tests
+      run: ./gradlew app:testReleaseUnitTest --stacktrace
+  
+# Disable espresso tests for now as on GH actions 6 tests are failing whereas locally on the same device they are passing - investigation required        
+ 
+# run-espresso:
+  
+#    needs: [build]
+#    runs-on: macos-latest
+    
+#    steps:
+#    - uses: actions/checkout@v3
+#    - name: set up JDK 11
+#      uses: actions/setup-java@v3
+#      with:
+#        java-version: '11'
+#        distribution: 'temurin'
+#        cache: gradle
+
+#    - name: Grant execute permission for gradlew
+#      run: chmod +x gradlew
+      
+#    - name: Cache Gradle packages
+#      uses: actions/cache@v3
+#      id: restore-build
+#      with:
+#        path: |
+#          ./*
+#        key: ${{ github.sha }}
+        
+#    - name: Run espresso tests
+#      uses: reactivecircus/android-emulator-runner@v2
+#      with:
+#        api-level: 29
+#        profile: Galaxy Nexus
+#        target: google_apis
+#        script: ./gradlew connectedCheck
+        
+#    - name: Upload intrumentation results
+#      if: ${{ always() }}
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: instrumentation-test-results-29
+#        path: ./**/build/reports/androidTests/connected/**

@@ -32,5 +32,6 @@
     <string name="representative_fb">%s facebook page</string>
     <string name="representative_twitter">%s twitted</string>
     <string name="representative_www">%s web page</string>
+    <string name="representative_failed_parse_location">Failed retrieve location details</string>
 
 </resources>

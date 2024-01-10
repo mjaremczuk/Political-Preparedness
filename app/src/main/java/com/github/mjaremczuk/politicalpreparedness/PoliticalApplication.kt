@@ -14,6 +14,7 @@ import com.github.mjaremczuk.politicalpreparedness.repository.DefaultElectionsRe
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionDataSource
 import com.github.mjaremczuk.politicalpreparedness.repository.ElectionsRepository
 import com.github.mjaremczuk.politicalpreparedness.representative.RepresentativeViewModel
+import com.github.mjaremczuk.politicalpreparedness.utils.GeocoderHelper
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
@@ -36,16 +37,27 @@ class PoliticalApplication : Application() {
             }
             viewModel { ElectionsViewModel(get()) }
             viewModel { RepresentativeViewModel(get()) }
+            factory { GeocoderHelper.Factory(Dispatchers.IO) }
             single { ElectionDatabase.getInstance(this@PoliticalApplication).electionDao as ElectionDao }
             single { CivicsApi.create() as CivicsApiService }
-            single(qualifier = named("local")) { LocalDataSource(get(), Dispatchers.IO) as ElectionDataSource }
-            single(qualifier = named("remote")) { NetworkDataSource(get(), Dispatchers.IO) as ElectionDataSource }
-            single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat}
+            single(qualifier = named("local")) {
+                LocalDataSource(
+                    get(),
+                    Dispatchers.IO
+                ) as ElectionDataSource
+            }
+            single(qualifier = named("remote")) {
+                NetworkDataSource(
+                    get(),
+                    Dispatchers.IO
+                ) as ElectionDataSource
+            }
+            single { SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) as DateFormat }
             single {
                 DefaultElectionsRepository(
-                        get<ElectionDataSource>(qualifier = named("local")),
-                        get<ElectionDataSource>(qualifier = named("remote")),
-                        Dispatchers.IO,
+                    get<ElectionDataSource>(qualifier = named("local")),
+                    get<ElectionDataSource>(qualifier = named("remote")),
+                    Dispatchers.IO,
                 ) as ElectionsRepository
             }
         }
