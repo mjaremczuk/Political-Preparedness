@@ -1,6 +1,7 @@
 ## Political Preparedness
 
-PolitcalPreparedness is an example application built to demonstrate core Android Development skills as presented in the Udacity Android Developers Kotlin curriculum. 
+PolitcalPreparedness is an example application built to demonstrate core Android Development skills as presented in the Udacity Android Developers Kotlin curriculum.
+Application uses https://www.googleapis.com/civicinfo/ api for demo purposes only. None of government institutions is using application to provide information
 
 This app demonstrates the following views and techniques:
 
