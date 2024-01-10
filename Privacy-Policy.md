@@ -28,7 +28,7 @@ Device means any device that can access the Service such as a computer, a cellph
 
 Personal Data is any information that relates to an identified or identifiable individual.
 
-*Service* refers to the Application that uses https://www.googleapis.com/civicinfo/ api for demo purposes only. None of government institutions is using this application to provide information.
+**Service** refers to the Application that uses https://www.googleapis.com/civicinfo/ api for demo purposes only. None of government institutions is using this application to provide information.
 
 Service Provider means any natural or legal person who processes the data on behalf of the Company. It refers to third-party companies or individuals employed by the Company to facilitate the Service, to provide the Service on behalf of the Company, to perform services related to the Service or to assist the Company in analyzing how the Service is used.
 
