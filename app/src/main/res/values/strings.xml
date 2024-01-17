@@ -33,5 +33,6 @@
     <string name="representative_twitter">%s twitted</string>
     <string name="representative_www">%s web page</string>
     <string name="representative_failed_parse_location">Failed retrieve location details</string>
+    <string name="privacy_policy_menu_item">Privacy Policy</string>
 
 </resources>
